@@ -1,22 +1,59 @@
-import { isInGame, defaultTeam } from "./utils"
+import { isInGame, msToHhmmss, toAug } from "./utils"
+import { defaultTeam } from "./config"
 import { sendMessage } from "./message"
+import { PlayerAugmented } from "../index"
+import { keyv } from "./db"
 
-let checkpoints: { [key: number]: DiscPropertiesObject } = {}
-
-export const saveCheckpoint = (room: RoomObject, p: PlayerObject) => {
+export const saveCheckpoint = (room: RoomObject, p: PlayerAugmented) => {
     if (!isInGame(p)) {
         sendMessage(room, p, "You have to be in game to save a checkpoint.")
+        return
     }
 
     let props = room.getPlayerDiscProperties(p.id)
-    checkpoints[p.id] = props
+    p.checkpoint = props
+    sendMessage(room, p, "Checkpoint saved.")
 }
 
-export const loadCheckpoint = (room: RoomObject, p: PlayerObject) => {
-    room.setPlayerTeam(p.id, defaultTeam)
-    let props = checkpoints[p.id]
-    if (props) {
-        room.setPlayerDiscProperties(p.id, props)
+export const loadCheckpoint = async (room: RoomObject, p: PlayerAugmented) => {
+    await room.setPlayerTeam(p.id, defaultTeam)
+    if (p.checkpoint) {
+        room.setPlayerDiscProperties(p.id, p.checkpoint)
         sendMessage(room, p, "Checkpoint loaded.")
+    } else {
+        sendMessage(room, p, `No checkpoint found. Make a checkpoint with "!save"`)
     }
+}
+
+const bounds = {x: [610, 650], y: [220, 255]}
+
+export const handleAllFinish = (room: RoomObject) => {
+    room.getPlayerList().filter(p => p.team != 0).forEach(po => {
+        let p = toAug(po)
+        if (!hasFinished(room, p)){
+            return
+        }
+        let now = new Date().getTime()
+        let started = new Date(p.started).getTime()
+        let totalMiliseconds = now-started
+        sendMessage(room, null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)}`)
+        if (!p.bestTime || (totalMiliseconds < p.bestTime)) {
+            p.bestTime = totalMiliseconds
+            sendMessage(room, null, `🏁 ${p.name} has a New Personal Best!`)
+        }
+        p.finished = true
+        keyv.set(p.auth, p)
+    })
+}
+
+export const hasFinished = (room: RoomObject, p: PlayerAugmented) => {
+    let pos = room.getPlayerDiscProperties(p.id)
+    if ((pos.x > bounds.x[0]) && (pos.x < bounds.x[1])
+        && (pos.y > bounds.y[0]) && (pos.y < bounds.y[1])
+        && (!p.finished)){
+            return true
+        }
+        else {
+            return false
+        }
 }

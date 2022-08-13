@@ -1,16 +1,26 @@
 {
   "name": "hax-climb",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node run.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node run.ts"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Jakub Juszko",
+  "license": "MIT",
+  "homepage": "https://github.com/jakjus/hax-climb#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakjus/hax-climb.git"
+  },
+  "description": "Haxball Room Script for Climbing Mod",
   "dependencies": {
+    "@keyv/sqlite": "^3.5.3",
     "haxball.js": "^2.1.1",
+    "keyv": "^4.3.3",
     "ts-node": "^10.9.1"
+  },
+  "engines": {
+      "npm": ">=8.6.0",
+      "node": ">=16.0.0"
   }
 }
