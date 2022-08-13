@@ -28,6 +28,8 @@
 ## Install
 
 ```sh
+git clone git@github.com:jakjus/hax-climb.git
+cd hax-climb/
 npm install
 ```
 
