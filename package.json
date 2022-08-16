@@ -1,6 +1,6 @@
 {
   "name": "hax-climb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "scripts": {
     "start": "ts-node run.ts"

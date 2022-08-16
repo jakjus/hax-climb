@@ -6,11 +6,17 @@ import { keyv } from "./db"
 
 export const saveCheckpoint = (room: RoomObject, p: PlayerAugmented) => {
     if (!isInGame(p)) {
-        sendMessage(room, p, "You have to be in game to save a checkpoint.")
+        sendMessage(room, p, "❌ You have to be in game to save a checkpoint.")
         return
     }
 
     let props = room.getPlayerDiscProperties(p.id)
+
+    if (props.xspeed + props.yspeed > 0.1) {
+        sendMessage(room, p, "❌ You cannot move while saving a checkpoint.")
+        return
+    }
+
     p.checkpoint = props
     sendMessage(room, p, "Checkpoint saved.")
 }
