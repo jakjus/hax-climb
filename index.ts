@@ -12,6 +12,7 @@ export interface PlayerAugmented extends PlayerObject {
     checkpoint?: DiscPropertiesObject,
     finished: boolean,
     bestTime?: number,
+    points: number,
 }
 
 export let players: { [playerId: number]: PlayerAugmented } = {}
@@ -22,15 +23,16 @@ interface RoomArgs {
     token: string,
     geo?: { code: string; lat: number; lon: number; },
     password?: string,
+    private?: boolean,
 }
 
 const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
     let room = HBInit({
         roomName: args.roomName,
-        maxPlayers: 29,
+        maxPlayers: 9,
         playerName: "jakjus",
         password: args.password,
-        public: true,
+        public: !args.private,
         geo: args.geo,
         token: args.token,
     })
@@ -48,9 +50,12 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
         let data = await keyv.get(p.auth)
         if (data) {
             pAug = {...data, ...p}
+            if (!pAug.points) {
+                pAug.points = 0
+            }
             loadCheckpoint(room, pAug)
         } else {
-            pAug = {started: new Date(), finished: false, ...p}
+            pAug = {started: new Date(), finished: false, points: 0, ...p}
         }
         players[p.id] = pAug
         welcomePlayer(room, p)

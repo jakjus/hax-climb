@@ -1,5 +1,5 @@
 import { isInGame, msToHhmmss, toAug } from "./utils"
-import { defaultTeam } from "./config"
+import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
 import { PlayerAugmented } from "../index"
 import { keyv } from "./db"
@@ -12,12 +12,13 @@ export const saveCheckpoint = (room: RoomObject, p: PlayerAugmented) => {
 
     let props = room.getPlayerDiscProperties(p.id)
 
-    if (props.xspeed + props.yspeed > 0.1) {
+    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.09) {
         sendMessage(room, p, "❌ You cannot move while saving a checkpoint.")
         return
     }
 
     p.checkpoint = props
+    keyv.set(p.auth, p)
     sendMessage(room, p, "Checkpoint saved.")
 }
 
@@ -42,7 +43,12 @@ export const handleAllFinish = (room: RoomObject) => {
         let now = new Date().getTime()
         let started = new Date(p.started).getTime()
         let totalMiliseconds = now-started
-        sendMessage(room, null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)}`)
+        let mapEstimatedTimeMins = 60
+        let timeDiff = mapEstimatedTimeMins*60*1000-totalMiliseconds
+        // will be positive if good time, negative if bad time
+        let getPoints = Math.ceil(90*(1.012**(timeDiff/60000)))
+        sendMessage(room, null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
+        p.points += getPoints
         if (!p.bestTime || (totalMiliseconds < p.bestTime)) {
             p.bestTime = totalMiliseconds
             sendMessage(room, null, `🏁 ${p.name} has a New Personal Best!`)

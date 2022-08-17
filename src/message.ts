@@ -14,8 +14,8 @@ export const playerMessage = (room: RoomObject, p: PlayerAugmented, msg: string)
     let color = 0xd6d6d6
     if (p.bestTime){
         bestTime = `[${msToHhmmss(p.bestTime)}]`
-        color = 0xfaf6f0
+        color = 0xf2e5d0
     } 
 
-    room.sendAnnouncement(`${p.name} ${bestTime}: ${msg}`, undefined, color, "normal", 1)
+    room.sendAnnouncement(`${p.name} ${bestTime} [${Math.floor(p.points)}⛰️]: ${msg}`, undefined, color, "normal", 1)
 }

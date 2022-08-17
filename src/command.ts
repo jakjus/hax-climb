@@ -1,7 +1,8 @@
 import { sendMessage } from "./message"
 import { PlayerAugmented } from "../index"
 import { saveCheckpoint, loadCheckpoint } from "./checkpoint"
-import { serverInfo, defaultTeam } from "./config"
+import { defaultTeam } from "./settings"
+import config from "../config"
 import { msToHhmmss } from "./utils"
 import { keyv } from "./db"
 
@@ -25,16 +26,16 @@ const commands: { [key: string]: commandFunc } = {
     l: (room, p) => loadCheckpoint(room, p),
     time: (room, p) => showTime(room, p),
     t: (room, p) => showTime(room, p),
-    reset: (room, p) => reset(room, p),
-    rr: (room, p) => reset(room, p),
-    top: (room, p) => showLeaderboards(room, p),
+    resetclimb: (room, p) => reset(room, p),
+    top: (room, p) => showLeaderboardsPoints(room, p),
+    topmap: (room, p) => showLeaderboards(room, p),
     bb: (room, p) => bb(room, p),
     help: (room, p) => showHelp(room, p),
     //testEnd: (room, p) => testEnd(room, p),
 }
 
 const showHelp = (room: RoomObject, p: PlayerObject) => {
-    sendMessage(room, p, `${serverInfo}. Commands: ${Object.keys(commands)
+    sendMessage(room, p, `${config.roomName}. Commands: ${Object.keys(commands)
                     .map(k => "!"+k)
                     .join(", ")}`)
 }
@@ -73,6 +74,25 @@ const showLeaderboards = async (room: RoomObject, p: PlayerAugmented) => {
         sendMessage(room, p, `${leader}`)
     }
 }
+
+const showLeaderboardsPoints = async (room: RoomObject, p: PlayerAugmented) => {
+    let leaderboards = []
+    for await (const [_, value] of keyv.iterator()) {
+        if (value.points) {
+            leaderboards.push({name: value.name, points: value.points})
+        }
+    };
+    if (leaderboards.length == 0) {
+        sendMessage(room, p, `Noone has any points.`)
+        return
+    }
+    let leaderboardsStr = leaderboards.sort((a, b) => a.points - b.points).slice(0,10).map((v, i) => `${i+1}. ${v.name} [${Math.floor(p.points)}⛰️]`)
+    sendMessage(room, p, `Points leaderboards:`)
+    for (let leader of leaderboardsStr) {
+        sendMessage(room, p, `${leader}`)
+    }
+}
+
 
 const bb = (room: RoomObject, p: PlayerAugmented) => {
     room.kickPlayer(p.id, "Bye!", false)
