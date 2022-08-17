@@ -1,6 +1,6 @@
 <h1 align="center">⛰️ hax-climb</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/npm-%3E%3D8.6.0-blue.svg" />
   <img src="https://img.shields.io/badge/node-%3E%3D16.0.0-blue.svg" />
   <a href="https://github.com/jakjus/hax-climb#readme" target="_blank">
@@ -35,21 +35,15 @@ npm install
 
 ## Usage
 
-Insert **token** from https://haxball.com/headlesstoken into `run.ts`.
+Rename `config.example.ts` with `config.ts`. Insert **token** from https://haxball.com/headlesstoken into `config.ts`.
 
 ```ts
-// run.ts
+// config.ts
 
-import HaxballJS from "haxball.js";
-import roomBuilder from "./index";
-
-HaxballJS.then(HBInit => roomBuilder(HBInit, {
-    roomName: "HaxClimb v0.1.0",
-    token: "thr1.AAAAAINSERTYOURTOKEN",
-    // You may define below variables
-    // geo: { code: "PL", lat: 50.1, lon: 15.5 },
-    // password: "YOUR_PASSWORD",
-}))
+export default {
+    roomName: `🌕   HaxClimb v0.2 by jakjus`,
+    token: `YOUR_TOKEN_HERE`,
+}
 ```
 
 Run Server:
