@@ -29,7 +29,7 @@ interface RoomArgs {
 const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
     let room = HBInit({
         roomName: args.roomName,
-        maxPlayers: 9,
+        maxPlayers: 29,
         playerName: "jakjus",
         password: args.password,
         public: !args.private,
