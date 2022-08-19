@@ -6585,7 +6585,7 @@ export const map = {
       ]
     },
     {
-      "radius": 17,
+      "radius": 11,
       "invMass": 0,
       "pos": [
         -594.5,
