@@ -2,21 +2,27 @@ import { Headless } from "haxball.js"
 import { isCommand, handleCommand } from "./src/command"
 import { playerMessage } from "./src/message"
 import { loadCheckpoint, handleAllFinish } from "./src/checkpoint"
-import { toAug, addTransparency } from "./src/utils"
+import { toAug, addTransparency, getStats, setStats, updateTime } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
-import winkysChallenge from "./src/maps/winkys-challenge"
 import { keyv } from "./src/db"
+import { initMapCycle, currentMap } from "./src/mapchooser"
 
-export interface PlayerAugmented extends PlayerObject {
+export interface PlayerMapStats {
     started: Date,
     checkpoint?: DiscPropertiesObject,
     finished: boolean,
     bestTime?: number,
+    stopped?: Date,
+}
+
+export interface PlayerAugmented extends PlayerObject {
+    mapStats: { [mapName: string]: PlayerMapStats },
     points: number,
 }
 
 export let players: { [playerId: number]: PlayerAugmented } = {}
 
+export let room: RoomObject;
 
 interface RoomArgs {
     roomName: string,
@@ -27,21 +33,23 @@ interface RoomArgs {
 }
 
 const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
-    let room = HBInit({
+    room = HBInit({
         roomName: args.roomName,
         maxPlayers: 29,
         playerName: "jakjus",
         password: args.password,
         public: !args.private,
+        noPlayer: true,
         geo: args.geo,
         token: args.token,
     })
 
     room.setTimeLimit(0)
     room.setScoreLimit(0)
-    room.setCustomStadium(JSON.stringify(winkysChallenge))
-    room.startGame()
-    setInterval(() => handleAllFinish(room), 200)
+    initMapCycle()
+
+
+    setInterval(() => handleAllFinish(), 200)
 
 
     room.onPlayerJoin = async p => {
@@ -53,15 +61,23 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
             if (!pAug.points) {
                 pAug.points = 0
             }
-            loadCheckpoint(room, pAug)
+            if (!getStats(pAug).started) {
+                setStats(pAug, "started", new Date())
+            }
+            if (getStats(pAug).finished === undefined) {
+                setStats(pAug, "finished", false)
+            }
+            updateTime(pAug)
+            loadCheckpoint(pAug)
         } else {
-            pAug = {started: new Date(), finished: false, points: 0, ...p}
+            pAug = {mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}, points: 0, ...p}
         }
         players[p.id] = pAug
         welcomePlayer(room, p)
     }
 
     room.onPlayerLeave = p => {
+        setStats(toAug(p), "stopped", new Date())
         // save to db
         keyv.set(toAug(p).auth, toAug(p))
         delete players[p.id]
@@ -69,19 +85,22 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
 
     room.onPlayerChat = (p, msg) => {
         if (isCommand(msg)){
-            handleCommand(room, toAug(p), msg)
+            handleCommand(toAug(p), msg)
             return false
         }
-        playerMessage(room, toAug(p), msg)
+        playerMessage(toAug(p), msg)
         return false
     }
 
     room.onPlayerTeamChange = p => {
         toAug(p).team = p.team
+        console.log(toAug(p).team)
         addTransparency(room, p)
     }
 
-    room.onRoomLink = url => console.log(`Room link: ${url}`)
+    room.onRoomLink = url => {
+        console.log(`Room link: ${url}`)
+    }
 }
 
 export default roomBuilder;

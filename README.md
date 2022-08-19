@@ -1,6 +1,6 @@
 <h1 align="center">⛰️ hax-climb</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/npm-%3E%3D8.6.0-blue.svg" />
   <img src="https://img.shields.io/badge/node-%3E%3D16.0.0-blue.svg" />
   <a href="https://github.com/jakjus/hax-climb#readme" target="_blank">
@@ -18,7 +18,7 @@
 
 ![Preview](./preview.png)
 
-### 🏠 [Homepage](https://github.com/jakjus/hax-climb#readme)
+### 🚀 [Discord](https://discord.gg/dYk5UXs)
 
 ## Prerequisites
 
@@ -51,14 +51,29 @@ Run Server:
 npm start
 ```
 
+### Adding maps
+To add a new map, follow the format in `src/maps/jakjus-tower.ts`. Then, add appropiate import in `src/maps/maplist.ts`. Map will be changed automatically.
+
+### Settings
+Some script settings can be changed in `src/settings.ts`.
+
+### Migration (optional)
+*Only if you upgrade from v0.x.x to v1.x.x and some data exists!*
+
+To migrate data (database) from v0.x.x to v1.x.x:
+```
+npm run migrate
+```
+
 ## Features
 - [x] Winky's Climbing Challenge map
 - [x] Checkpoint system
 - [x] Timer
 - [x] Leaderboards
 - [x] SQLite database (persistent stats)
-- [ ] Multiple maps with separate leaderboards
+- [x] Multiple maps with separate leaderboards
 - [ ] Multiple databases
+
 
 ## Author
 

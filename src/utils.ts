@@ -1,8 +1,34 @@
-import { PlayerAugmented, players } from "../index"
+import { PlayerAugmented, PlayerMapStats, players } from "../index"
+import { currentMap } from "./mapchooser"
 
+export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
 export const toAug = (p: PlayerObject): PlayerAugmented => players[p.id]
-export const msToHhmmss = (ms: number): string => {
+export const getStats = (p: PlayerAugmented): PlayerMapStats => {
+    let mapStats = p.mapStats
+    if (!mapStats || !mapStats[currentMap.slug]) { 
+        let newMapStats = {[currentMap.slug]: {started: new Date(), finished: false}}
+        p = {...p, mapStats: newMapStats}
+        return newMapStats[currentMap.slug]
+    }
+    return mapStats[currentMap.slug]
+}
+export const updateTime = (pAug: PlayerAugmented): void => {
+    let stopped = getStats(pAug).stopped
+    let started = getStats(pAug).started
+    if (stopped) {
+        let dateNow = new Date().getTime()
+        let timeSpent = new Date(stopped).getTime() - new Date(started).getTime()
+        setStats(pAug, "started", dateNow - timeSpent) 
+        setStats(pAug, "stopped", undefined)
+    }
+}
+
+export const setStats = (p: PlayerAugmented, key: keyof PlayerMapStats, value: PlayerMapStats[typeof key]): void => {
+    p.mapStats[currentMap.slug] = { ...p.mapStats[currentMap.slug], [key]: value }
+}
+export const msToHhmmss = (ms: number | undefined): string => {
+    if (!ms) { return '-' }
     let hours = Math.floor(ms/(1000*60*60))
     let minutes = Math.floor(ms/(1000*60)) - hours*60
     let seconds = Math.floor(ms/(1000)) - minutes*60 - hours*60*60

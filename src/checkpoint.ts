@@ -1,68 +1,84 @@
-import { isInGame, msToHhmmss, toAug } from "./utils"
+import { isInGame, msToHhmmss, toAug, getStats, setStats, sleep } from "./utils"
 import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
-import { PlayerAugmented } from "../index"
+import { PlayerAugmented, room } from "../index"
+import { currentMap } from "./mapchooser"
 import { keyv } from "./db"
 
-export const saveCheckpoint = (room: RoomObject, p: PlayerAugmented) => {
+export const saveCheckpoint = async (p: PlayerAugmented) => {
     if (!isInGame(p)) {
-        sendMessage(room, p, "❌ You have to be in game to save a checkpoint.")
+        sendMessage(p, "❌ You have to be in game to save a checkpoint.")
         return
     }
 
     let props = room.getPlayerDiscProperties(p.id)
+    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
+        sendMessage(p, "❌ You cannot move while saving a checkpoint.")
+        return
+    }
+    let oldprops = props
+    sendMessage(p, "⏳ Saving checkpoint...")
 
-    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.09) {
-        sendMessage(room, p, "❌ You cannot move while saving a checkpoint.")
+    for (let i = 0; i < 5; i++) {
+        await sleep(1000)
+        props = room.getPlayerDiscProperties(p.id)
+        if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
+            sendMessage(p, "❌ You cannot move while saving a checkpoint.")
+            return
+        }
+    }
+
+    if ((Math.abs(oldprops.x - props.x) + Math.abs(oldprops.y - props.y)) > 1) {
+        sendMessage(p, "❌ You cannot move while saving a checkpoint.")
         return
     }
 
-    p.checkpoint = props
+    setStats(p, "checkpoint", props)
     keyv.set(p.auth, p)
-    sendMessage(room, p, "Checkpoint saved.")
+    sendMessage(p, "✅ Checkpoint saved.")
 }
 
-export const loadCheckpoint = async (room: RoomObject, p: PlayerAugmented) => {
+export const loadCheckpoint = async (p: PlayerAugmented) => {
     await room.setPlayerTeam(p.id, defaultTeam)
-    if (p.checkpoint) {
-        room.setPlayerDiscProperties(p.id, p.checkpoint)
-        sendMessage(room, p, "Checkpoint loaded.")
+    let pCheckpoint = getStats(p).checkpoint
+    if (pCheckpoint) {
+        room.setPlayerDiscProperties(p.id, pCheckpoint)
+        sendMessage(p, "Checkpoint loaded.")
     } else {
-        sendMessage(room, p, `No checkpoint found. Make a checkpoint with "!save"`)
+        sendMessage(p, `No checkpoint found. Make a checkpoint with "!save"`)
     }
 }
 
-const bounds = {x: [610, 650], y: [220, 255]}
-
-export const handleAllFinish = (room: RoomObject) => {
+export const handleAllFinish = () => {
     room.getPlayerList().filter(p => p.team != 0).forEach(po => {
         let p = toAug(po)
-        if (!hasFinished(room, p)){
+        if (!hasFinished(p)){
             return
         }
         let now = new Date().getTime()
-        let started = new Date(p.started).getTime()
+        let started = new Date(getStats(p).started).getTime()
         let totalMiliseconds = now-started
         let mapEstimatedTimeMins = 60
         let timeDiff = mapEstimatedTimeMins*60*1000-totalMiliseconds
         // will be positive if good time, negative if bad time
         let getPoints = Math.ceil(90*(1.012**(timeDiff/60000)))
-        sendMessage(room, null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
+        sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
         p.points += getPoints
-        if (!p.bestTime || (totalMiliseconds < p.bestTime)) {
-            p.bestTime = totalMiliseconds
-            sendMessage(room, null, `🏁 ${p.name} has a New Personal Best!`)
+        let pBestTime = getStats(p).bestTime
+        if (!pBestTime || (totalMiliseconds < pBestTime)) {
+            setStats(p, "bestTime", totalMiliseconds)
+            sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
-        p.finished = true
+        setStats(p, "finished", true)
         keyv.set(p.auth, p)
     })
 }
 
-export const hasFinished = (room: RoomObject, p: PlayerAugmented) => {
+export const hasFinished = (p: PlayerAugmented) => {
     let pos = room.getPlayerDiscProperties(p.id)
-    if ((pos.x > bounds.x[0]) && (pos.x < bounds.x[1])
-        && (pos.y > bounds.y[0]) && (pos.y < bounds.y[1])
-        && (!p.finished)){
+    if ((pos.x > currentMap.bounds.x[0]) && (pos.x < currentMap.bounds.x[1])
+        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1])
+        && (!getStats(p).finished)){
             return true
         }
         else {
