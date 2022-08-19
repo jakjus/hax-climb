@@ -1,4 +1,4 @@
-import { isInGame, msToHhmmss, toAug, getStats, sleep } from "./utils"
+import { isInGame, msToHhmmss, toAug, getStats, setStats, sleep } from "./utils"
 import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
 import { PlayerAugmented, room } from "../index"
@@ -12,7 +12,7 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
     }
 
     let props = room.getPlayerDiscProperties(p.id)
-    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.1) {
+    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
         sendMessage(p, "❌ You cannot move while saving a checkpoint.")
         return
     }
@@ -20,9 +20,9 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
     sendMessage(p, "⏳ Saving checkpoint...")
 
     for (let i = 0; i < 5; i++) {
-        sleep(1000)
+        await sleep(1000)
         props = room.getPlayerDiscProperties(p.id)
-        if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.1) {
+        if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
             sendMessage(p, "❌ You cannot move while saving a checkpoint.")
             return
         }
@@ -33,15 +33,16 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
         return
     }
 
-    getStats(p).checkpoint = props
+    setStats(p, "checkpoint", props)
     keyv.set(p.auth, p)
     sendMessage(p, "✅ Checkpoint saved.")
 }
 
 export const loadCheckpoint = async (p: PlayerAugmented) => {
     await room.setPlayerTeam(p.id, defaultTeam)
-    if (getStats(p).checkpoint) {
-        room.setPlayerDiscProperties(p.id, getStats(p).checkpoint)
+    let pCheckpoint = getStats(p).checkpoint
+    if (pCheckpoint) {
+        room.setPlayerDiscProperties(p.id, pCheckpoint)
         sendMessage(p, "Checkpoint loaded.")
     } else {
         sendMessage(p, `No checkpoint found. Make a checkpoint with "!save"`)
@@ -63,11 +64,12 @@ export const handleAllFinish = () => {
         let getPoints = Math.ceil(90*(1.012**(timeDiff/60000)))
         sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
         p.points += getPoints
-        if (!getStats(p).bestTime || (totalMiliseconds < getStats(p).bestTime)) {
-            getStats(p).bestTime = totalMiliseconds
+        let pBestTime = getStats(p).bestTime
+        if (!pBestTime || (totalMiliseconds < pBestTime)) {
+            setStats(p, "bestTime", totalMiliseconds)
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
-        getStats(p).finished = true
+        setStats(p, "finished", true)
         keyv.set(p.auth, p)
     })
 }

@@ -1,9 +1,10 @@
 {
   "name": "hax-climb",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node run.ts"
+    "start": "ts-node run.ts",
+    "migrate": "ts-node migration/v1.0.0/migrate.ts"
   },
   "author": "Jakub Juszko",
   "license": "MIT",

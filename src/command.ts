@@ -3,7 +3,7 @@ import { PlayerAugmented, room } from "../index"
 import { saveCheckpoint, loadCheckpoint } from "./checkpoint"
 import { defaultTeam } from "./settings"
 import config from "../config"
-import { msToHhmmss, getStats } from "./utils"
+import { msToHhmmss, getStats, setStats } from "./utils"
 import { keyv } from "./db"
 
 export const isCommand = (msg: string) => msg.trim().startsWith("!")
@@ -49,9 +49,9 @@ const showTime = (p: PlayerAugmented) => {
 }
 
 const reset = (p: PlayerAugmented) => {
-    getStats(p).started = new Date()
-    getStats(p).checkpoint = undefined
-    getStats(p).finished = false
+    setStats(p, "started", new Date())
+    setStats(p, "checkpoint", undefined)
+    setStats(p, "finished", false)
     room.setPlayerTeam(p.id, 0)
     room.setPlayerTeam(p.id, defaultTeam)
     sendMessage(p, `Your climb was reset.`)
