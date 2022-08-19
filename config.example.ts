@@ -1,7 +1,7 @@
 // Change this file name to config.ts and fill with your values
 
 export default {
-    roomName: `🌕   HaxClimb v0.2 by jakjus`,
+    roomName: `🌕   HaxClimb v1.0 by jakjus`,
     token: ``,
     // geo:
     // password: "example",

@@ -35,8 +35,6 @@ export const changeMap = () => {
     room.getPlayerList().forEach(po => {
         let pAug = toAug(po)
         getStats(pAug).stopped = new Date()
-        console.log('date now', new Date())
-        console.log('stats', getStats(pAug))
     })
     mapCounter += 1
     currentMap = getCurrentMap()
@@ -57,7 +55,7 @@ export const changeMap = () => {
 
 let announced = 0
 const checkTimer = () => {
-    diffSecs = mapDurationMins*60/44 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    diffSecs = mapDurationMins*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
     if (process.env.DEBUG) {
         console.log(diffSecs)
     }

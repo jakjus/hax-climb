@@ -94,7 +94,6 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
 
     room.onPlayerTeamChange = p => {
         toAug(p).team = p.team
-        console.log(toAug(p).team)
         addTransparency(room, p)
     }
 
