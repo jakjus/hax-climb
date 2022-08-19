@@ -1,8 +1,12 @@
-import { PlayerAugmented, players } from "../index"
+import { PlayerAugmented, PlayerMapStats, players } from "../index"
+import { currentMap } from "./mapchooser"
 
+export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
 export const toAug = (p: PlayerObject): PlayerAugmented => players[p.id]
-export const msToHhmmss = (ms: number): string => {
+export const getStats = (p: PlayerAugmented): PlayerMapStats => p.mapStats[currentMap.slug]
+export const msToHhmmss = (ms: number | undefined): string => {
+    if (!ms) { return '-' }
     let hours = Math.floor(ms/(1000*60*60))
     let minutes = Math.floor(ms/(1000*60)) - hours*60
     let seconds = Math.floor(ms/(1000)) - minutes*60 - hours*60*60
