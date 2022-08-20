@@ -5,7 +5,6 @@ import { loadCheckpoint } from "./checkpoint";
 import { sendMessage } from "./message";
 import { mapDurationMins } from "./settings";
 
-
 export interface ClimbMap {
     slug: string,
     estimatedTimeMins: number,
@@ -20,8 +19,9 @@ let mapCounter: number;
 let mapStarted: Date;
 let maxMaps: number;
 
+
 let getCurrentMap = () => loadedMaps[mapCounter%maxMaps]
-let getNextMap = () => loadedMaps[(mapCounter+1)%maxMaps]
+let getNextMapName = () => nextMap?.map?.name || `[Not yet decided]`
 
 export const initMapCycle = () => {
     Object.values(maps).forEach((m: ClimbMap) => loadedMaps.push(m))
@@ -51,35 +51,86 @@ export const changeMap = async () => {
         loadCheckpoint(pAug)
     })
     announced = 0
+    nextMap = undefined;
 }
 
 let announced = 0
+
+type voteOption = { id: number, option: ClimbMap, votes: number }
+export let voteOptions: voteOption[]
+
+export let onlyVoteMessage = false
+
+export const printOption = (vo: voteOption) => {
+    if (vo.option.map.name == currentMap.map.name) {
+        return `${vo.id}. Current map +10 minutes`
+    }
+    return `${vo.id}. ${vo.option.map.name}`
+}
+const startVoting = () => {
+    onlyVoteMessage = true
+    sendMessage(null, `🗳️ Vote for next map:`)
+    let prolongOption = {id: 1, option: currentMap, votes: 0}
+    voteOptions = [prolongOption]
+    sendMessage(null, printOption(prolongOption))
+    for (const [i, haxMap] of loadedMaps.filter(m => m.map.name != currentMap.map.name).entries()) {
+        let opt = {id: i+2, option: haxMap, votes: 0}
+        voteOptions.push(opt)
+        sendMessage(null, printOption(opt))
+    }
+}
+
+const endVoting = () => {
+    let sorted = voteOptions.sort((a, b) => b.votes - a.votes)
+    sendMessage(null, `🗳️ Voting ended. Results:`)
+    for (let result of sorted) {
+        sendMessage(null, `[${result.votes} votes] ${printOption(result)}`)
+    }
+    if (sorted[0].id == 1) {
+        sendMessage(null, `Current map will be prolonged by 10 minutes.`)
+        prolong()
+    } else {
+        sendMessage(null, `Next map has been set to: ${sorted[0].option.map.name}`)
+        nextMap = sorted[0].option
+    }
+}
+
+let nextMap: ClimbMap;
+const prolong = () => {
+    diffSecs = 15*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    announced = 0
+    nextMap = undefined;
+}
+
 const checkTimer = () => {
     diffSecs = mapDurationMins*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
-    if (process.env.DEBUG) {
-        console.log(diffSecs)
-    }
     let diffMins = Math.ceil(diffSecs/60)
-    if (announced == 0 && diffSecs < 15*60) {
-        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMap().map.name}`)
+    if (announced == 0 && diffSecs < 10*60) {
+        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
         announced += 1
     }
     if (announced == 1 && diffSecs < 5*60) {
-        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMap().map.name}`)
+        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
+        startVoting()
+        setTimeout(() => endVoting(), 20*1000)
         announced += 1
     }
     if (announced == 2 && diffSecs < 1*60) {
-        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMap().map.name}`)
+        sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
         announced += 1
     }
     if (announced == 3 && diffSecs < 15) {
-        sendMessage(null, `${Math.ceil(diffSecs)} seconds left. Next map: ${getNextMap().map.name}. "!save" your progress now.`)
+        sendMessage(null, `${Math.ceil(diffSecs)} seconds left. Next map: ${getNextMapName()}. "!save" your progress now.`)
         announced += 1
     }
     if (diffSecs < 0) {
-        sendMessage(null, `Changing map: ${getNextMap().map.name}`)
+        sendMessage(null, `Changing map: ${getNextMapName()}`)
         changeMap()
     }
 }
 
-setInterval(checkTimer, 5000)
+if (loadedMaps.length == 1){
+    sendMessage(null, `Only one map loaded. Map chooser disabled.`)
+} else {
+    setInterval(checkTimer, 5000)
+}
