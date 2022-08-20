@@ -12,7 +12,7 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
     }
 
     let props = room.getPlayerDiscProperties(p.id)
-    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
+    if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.25) {
         sendMessage(p, "❌ You cannot move while saving a checkpoint.")
         return
     }
@@ -23,7 +23,7 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
         await sleep(1000)
         props = room.getPlayerDiscProperties(p.id)
         if (!props) { return }
-        if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
+        if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.25) {
             sendMessage(p, "❌ You cannot move while saving a checkpoint.")
             return
         }

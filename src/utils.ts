@@ -4,19 +4,12 @@ import { currentMap } from "./mapchooser"
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
 export const toAug = (p: PlayerObject): PlayerAugmented => players[p.id]
-export const getStats = (p: PlayerAugmented): PlayerMapStats => {
-    let mapStats = p.mapStats
-    if (!mapStats || !mapStats[currentMap.slug]) { 
-        let newMapStats = {[currentMap.slug]: {started: new Date(), finished: false}}
-        p = {...p, mapStats: newMapStats}
-        return newMapStats[currentMap.slug]
-    }
-    return mapStats[currentMap.slug]
-}
+export const getStats = (p: PlayerAugmented): PlayerMapStats => p.mapStats[currentMap.slug]
+
 export const updateTime = (pAug: PlayerAugmented): void => {
     let stopped = getStats(pAug).stopped
     let started = getStats(pAug).started
-    if (stopped) {
+    if (started && stopped) {
         let dateNow = new Date().getTime()
         let timeSpent = new Date(stopped).getTime() - new Date(started).getTime()
         setStats(pAug, "started", dateNow - timeSpent) 

@@ -31,21 +31,21 @@ export const initMapCycle = () => {
 }
 
 let diffSecs: number;
-export const changeMap = () => {
+export const changeMap = async () => {
     room.getPlayerList().forEach(po => {
         let pAug = toAug(po)
         getStats(pAug).stopped = new Date()
     })
     mapCounter += 1
-    currentMap = getCurrentMap()
+    currentMap = await getCurrentMap()
     mapStarted = new Date()
     room.stopGame()
     room.setCustomStadium(JSON.stringify(currentMap.map))
     room.startGame()
     room.getPlayerList().forEach(po => {
         let pAug = toAug(po)
-        if (!getStats(pAug).started) {
-            pAug = {...pAug, mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}}
+        if (!getStats(pAug) || !getStats(pAug).started) {
+            pAug.mapStats = {...pAug.mapStats, [currentMap.slug]: {started: new Date(), finished: false}}
         }
         updateTime(pAug)
         loadCheckpoint(pAug)
