@@ -93,11 +93,12 @@ const endVoting = () => {
         sendMessage(null, `Next map has been set to: ${sorted[0].option.map.name}`)
         nextMap = sorted[0].option
     }
+    onlyVoteMessage = false
 }
 
 let nextMap: ClimbMap | undefined;
 const prolong = () => {
-    diffSecs = 15*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    mapStarted = new Date(mapStarted.getTime()+15*60*1000)
     announced = 0
     nextMap = undefined;
 }
