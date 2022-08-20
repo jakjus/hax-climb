@@ -76,10 +76,11 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
         welcomePlayer(room, p)
     }
 
-    room.onPlayerLeave = p => {
-        setStats(toAug(p), "stopped", new Date())
+    room.onPlayerLeave = async p => {
+        let pAug = toAug(p)
+        await setStats(pAug, "stopped", new Date())
         // save to db
-        keyv.set(toAug(p).auth, toAug(p))
+        keyv.set(pAug.auth, toAug(p))
         delete players[p.id]
     }
 

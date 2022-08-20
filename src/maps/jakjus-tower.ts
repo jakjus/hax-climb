@@ -1,5 +1,5 @@
 export const slug = "jakjus-tower"
-export const estimatedTimeMins = 5
+export const estimatedTimeMins = 2
 export const bounds = {x: [-1000, -900], y: [-500, -450]}
 export const map = {
   "name": "[Easy] Jakjus' Tower",
