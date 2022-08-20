@@ -61,16 +61,14 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
             if (!pAug.points) {
                 pAug.points = 0
             }
-            if (!getStats(pAug).started) {
-                setStats(pAug, "started", new Date())
-            }
-            if (getStats(pAug).finished === undefined) {
-                setStats(pAug, "finished", false)
+            let stats = getStats(pAug)
+            if (!pAug.mapStats || !stats || !stats.started) {
+                pAug.mapStats = {...pAug.mapStats, [currentMap.slug]: {started: new Date(), finished: false}}
             }
             updateTime(pAug)
             loadCheckpoint(pAug)
         } else {
-            pAug = {mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}, points: 0, ...p}
+            pAug = {...p, mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}, points: 0}
         }
         players[p.id] = pAug
         welcomePlayer(room, p)
