@@ -60,7 +60,9 @@ const reset = (p: PlayerAugmented) => {
 const showLeaderboards = async (p: PlayerAugmented) => {
     let leaderboards = []
     for await (const [_, value] of keyv.iterator()) {
-        let pBestTime = getStats(value).bestTime
+        let stats = getStats(value)
+        if (!stats) { continue }
+        let pBestTime = stats.bestTime
         if (pBestTime) {
             leaderboards.push({name: value.name, time: pBestTime})
         }
