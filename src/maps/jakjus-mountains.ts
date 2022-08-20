@@ -3840,11 +3840,11 @@ export const map = {
       ]
     },
     {
-      "radius": 13,
+      "radius": 12,
       "invMass": 0,
       "pos": [
         -367,
-        -435
+        -439
       ],
       "color": "transparent",
       "cMask": [
@@ -3852,7 +3852,10 @@ export const map = {
       ],
       "cGroup": [
         "wall"
-      ]
+      ],
+      "_data": {
+        "mirror": {}
+      }
     },
     {
       "radius": 74,
@@ -3888,11 +3891,11 @@ export const map = {
       ]
     },
     {
-      "radius": 21,
+      "radius": 13,
       "invMass": 0,
       "pos": [
-        -326,
-        -376
+        -341,
+        -380
       ],
       "color": "transparent",
       "cMask": [
@@ -3900,7 +3903,10 @@ export const map = {
       ],
       "cGroup": [
         "wall"
-      ]
+      ],
+      "_data": {
+        "mirror": {}
+      }
     },
     {
       "radius": 15,
@@ -4525,11 +4531,11 @@ export const map = {
       ]
     },
     {
-      "radius": 33,
+      "radius": 37,
       "invMass": 0,
       "pos": [
-        -327,
-        -323
+        -326,
+        -332
       ],
       "color": "transparent",
       "cMask": [
@@ -4538,14 +4544,17 @@ export const map = {
       ],
       "cGroup": [
         "wall"
-      ]
+      ],
+      "_data": {
+        "mirror": {}
+      }
     },
     {
-      "radius": 26,
+      "radius": 25,
       "invMass": 0,
       "pos": [
-        -373,
-        -364
+        -379,
+        -367
       ],
       "color": "transparent",
       "cMask": [
@@ -4553,7 +4562,10 @@ export const map = {
       ],
       "cGroup": [
         "wall"
-      ]
+      ],
+      "_data": {
+        "mirror": {}
+      }
     },
     {
       "radius": 75,
@@ -5186,8 +5198,8 @@ export const map = {
       "radius": 18,
       "invMass": 0,
       "pos": [
-        -354,
-        -405
+        -359,
+        -408
       ],
       "color": "transparent",
       "cMask": [
@@ -5195,7 +5207,10 @@ export const map = {
       ],
       "cGroup": [
         "wall"
-      ]
+      ],
+      "_data": {
+        "mirror": {}
+      }
     },
     {
       "radius": 102,
@@ -7583,7 +7598,7 @@ export const map = {
       -485
     ]
   ],
-  "canBeStored": false,
+  "canBeStored": true,
   "cameraFollow": "player",
   "blueSpawnPoints": []
 }
