@@ -95,7 +95,7 @@ const endVoting = () => {
     }
 }
 
-let nextMap: ClimbMap;
+let nextMap: ClimbMap | undefined;
 const prolong = () => {
     diffSecs = 15*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
     announced = 0
