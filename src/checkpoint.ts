@@ -22,6 +22,7 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
     for (let i = 0; i < 5; i++) {
         await sleep(1000)
         props = room.getPlayerDiscProperties(p.id)
+        if (!props) { return }
         if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.22) {
             sendMessage(p, "❌ You cannot move while saving a checkpoint.")
             return

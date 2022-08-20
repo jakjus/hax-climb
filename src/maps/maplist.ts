@@ -1,2 +1,2 @@
-export * as jakjusTower from "./jakjus-tower"
+export * as jakjusMountains from "./jakjus-mountains"
 export * as winkysChallenge from "./winkys-challenge"
