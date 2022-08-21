@@ -1,6 +1,6 @@
 import { PlayerAugmented, room } from "../index"
 import { msToHhmmss, getStats } from "./utils"
-import { voteOptions, onlyVoteMessage, printOption } from "./mapchooser"
+import { voteOptions, onlyVoteMessage, handleVote } from "./mapchooser"
 
 export const sendMessage = (p: PlayerObject | null, msg: string) => {
     if (p) {
@@ -24,8 +24,7 @@ export const playerMessage = (p: PlayerAugmented, msg: string) => {
             sendMessage(p, `Wring Vote by typing one of: ${voteOptions.map(o => o.id).join(", ")}`)
         } else {
             let choiceOpt = voteOptions.filter(v => v.id == choice)[0]
-            sendMessage(null, `${p.name} has voted for: ${printOption(choiceOpt)}`)
-            choiceOpt.votes += 1
+            handleVote(p, choiceOpt)
         }
         return false
     }

@@ -55,9 +55,19 @@ export const changeMap = async () => {
 }
 
 let announced = 0
+let hasVoted: string[] = []
 
 type voteOption = { id: number, option: ClimbMap, votes: number }
 export let voteOptions: voteOption[]
+export const handleVote = (p: PlayerObject, opt: voteOption) => {
+    if (!hasVoted.includes(p.auth)) {
+        hasVoted.push(p.auth)
+        sendMessage(null, `${p.name} has voted for: ${printOption(opt)}`)
+    } else {
+        opt.votes += 1
+        sendMessage(p, `You have already voted.`)
+    }
+}
 
 export let onlyVoteMessage = false
 
@@ -81,6 +91,7 @@ const startVoting = () => {
 }
 
 const endVoting = () => {
+    hasVoted = []
     let sorted = voteOptions.sort((a, b) => b.votes - a.votes)
     sendMessage(null, `🗳️ Voting ended. Results:`)
     for (let result of sorted) {
@@ -98,13 +109,18 @@ const endVoting = () => {
 
 let nextMap: ClimbMap | undefined;
 const prolong = () => {
-    mapStarted = new Date(mapStarted.getTime()+15*60*1000)
+    mapStarted = new Date(mapStarted.getTime()+10*60*1000)
     announced = 0
     nextMap = undefined;
 }
 
 const checkTimer = () => {
+    // The line below is very weird, and operating on Dates
+    // is very obscure. Need to change that someday.
     diffSecs = mapDurationMins*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    if (process.env.DEBUG) {
+        diffSecs = mapDurationMins*60/44 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    }
     let diffMins = Math.ceil(diffSecs/60)
     if (announced == 0 && diffSecs < 10*60) {
         sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
