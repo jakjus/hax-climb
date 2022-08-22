@@ -5573,6 +5573,22 @@ export const map = {
       ]
     },
     {
+      "radius": 13,
+      "invMass": 0,
+      "pos": [
+        -732,
+        -323
+      ],
+      "color": "transparent",
+      "cMask": [
+        "c1",
+        "red"
+      ],
+      "cGroup": [
+        "wall"
+      ]
+    },
+    {
       "radius": 17,
       "invMass": 0,
       "pos": [
