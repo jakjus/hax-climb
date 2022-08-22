@@ -4996,8 +4996,8 @@ export const map = {
       "radius": 43,
       "invMass": 0,
       "pos": [
-        -597,
-        -20
+        -544,
+        -90
       ],
       "color": "transparent",
       "cMask": [
@@ -5621,11 +5621,27 @@ export const map = {
       ]
     },
     {
-      "radius": 7,
+      "radius": 17,
       "invMass": 0,
       "pos": [
-        -774,
-        -194
+        -785,
+        -229
+      ],
+      "color": "transparent",
+      "cMask": [
+        "c1",
+        "red"
+      ],
+      "cGroup": [
+        "wall"
+      ]
+    },
+    {
+      "radius": 9,
+      "invMass": 0,
+      "pos": [
+        -793,
+        -203
       ],
       "color": "transparent",
       "cMask": [
