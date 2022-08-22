@@ -1,4 +1,4 @@
-export const slug = "jakjus-mountains"
+export const slug = "jakjus-cake-walk"
 export const estimatedTimeMins = 35
 export const bounds = {x: [-1000, -900], y: [340, 400]}
 export const map = {
