@@ -62,9 +62,9 @@ export let voteOptions: voteOption[]
 export const handleVote = (p: PlayerObject, opt: voteOption) => {
     if (!hasVoted.includes(p.auth)) {
         hasVoted.push(p.auth)
+        opt.votes += 1
         sendMessage(null, `${p.name} has voted for: ${printOption(opt)}`)
     } else {
-        opt.votes += 1
         sendMessage(p, `You have already voted.`)
     }
 }
