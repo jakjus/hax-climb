@@ -59,8 +59,7 @@ export const handleAllFinish = () => {
         let now = new Date().getTime()
         let started = new Date(getStats(p).started).getTime()
         let totalMiliseconds = now-started
-        let mapEstimatedTimeMins = 60
-        let timeDiff = mapEstimatedTimeMins*60*1000-totalMiliseconds
+        let timeDiff = currentMap.estimatedTimeMins*60*1000-totalMiliseconds
         // will be positive if good time, negative if bad time
         let getPoints = Math.ceil(100*(1.15**(timeDiff/60000)))
         sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
