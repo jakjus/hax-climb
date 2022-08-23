@@ -20,13 +20,17 @@ let mapStarted: Date;
 let maxMaps: number;
 
 
-let getCurrentMap = () => loadedMaps[mapCounter%maxMaps]
 let getNextMapName = () => nextMap?.map?.name || `[Not yet decided]`
 
 export const initMapCycle = () => {
+    if (loadedMaps.length == 1){
+        sendMessage(null, `Only one map loaded. Map chooser disabled.`)
+    } else {
+        setInterval(checkTimer, 5000)
+    }
     Object.values(maps).forEach((m: ClimbMap) => loadedMaps.push(m))
     maxMaps = loadedMaps.length
-    mapCounter = -1;
+    nextMap = loadedMaps[0]
     changeMap()
 }
 
@@ -36,8 +40,9 @@ export const changeMap = async () => {
         let pAug = toAug(po)
         getStats(pAug).stopped = new Date()
     })
-    mapCounter += 1
-    currentMap = await getCurrentMap()
+    if (nextMap) {
+        currentMap = nextMap
+    }
     mapStarted = new Date()
     room.stopGame()
     room.setCustomStadium(JSON.stringify(currentMap.map))
@@ -146,8 +151,3 @@ const checkTimer = () => {
     }
 }
 
-if (loadedMaps.length == 1){
-    sendMessage(null, `Only one map loaded. Map chooser disabled.`)
-} else {
-    setInterval(checkTimer, 5000)
-}
