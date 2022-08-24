@@ -1,6 +1,6 @@
 import * as maps from "./maps/maplist";
 import { room } from "../index";
-import { toAug, getStats, updateTime } from "./utils";
+import { toAug, getStats, updateTime, addTransparency } from "./utils";
 import { loadCheckpoint } from "./checkpoint";
 import { sendMessage } from "./message";
 import { mapDurationMins } from "./settings";
@@ -54,6 +54,7 @@ export const changeMap = async () => {
         }
         updateTime(pAug)
         loadCheckpoint(pAug)
+        addTransparency(pAug)
     })
     announced = 0
     nextMap = undefined;

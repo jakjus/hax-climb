@@ -1,5 +1,6 @@
 import { PlayerAugmented, PlayerMapStats, players } from "../index"
 import { currentMap } from "./mapchooser"
+import { room } from "../index"
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
@@ -43,9 +44,8 @@ export const msToHhmmss = (ms: number | undefined): string => {
     return timeString
 }
 
-export const addTransparency = (room: RoomObject, p: PlayerObject) => {
+export const addTransparency = (p: PlayerObject) => {
     let cf = room.CollisionFlags
-    let props = room.getPlayerDiscProperties(p.id)
     // @ts-ignore
-    room.setPlayerDiscProperties(p.id, {...props, cGroup: cf.c1})
+    room.setPlayerDiscProperties(p.id, {cGroup: cf.c1})
 }
