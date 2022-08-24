@@ -1,5 +1,5 @@
 export const slug = "jakjus-mountains"
-export const estimatedTimeMins = 50
+export const estimatedTimeMins = 22
 export const bounds = {x: [-1000, -900], y: [340, 400]}
 export const map = {
   "name": "[Medium] Jakjus' Mountains",

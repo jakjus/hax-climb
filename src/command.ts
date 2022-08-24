@@ -101,11 +101,6 @@ const bb = (p: PlayerAugmented) => {
     room.kickPlayer(p.id, "Bye!", false)
 }
 
-/*
- * Test leaderboards by teleporting to the end of the room.
- *
 const testEnd = (p: PlayerAugmented) => {
-    // @ts-ignore
     room.setPlayerDiscProperties(p.id, {x: 630, y: 220})
 }
-*/

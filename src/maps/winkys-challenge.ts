@@ -1,5 +1,5 @@
 export const slug = "winkys-challenge"
-export const estimatedTimeMins = 60
+export const estimatedTimeMins = 20
 export const bounds = {x: [610, 650], y: [220, 255]}
 export const map = {
   "name": "[Hard] Winky's Challenge",
