@@ -93,7 +93,7 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
 
     room.onPlayerTeamChange = p => {
         toAug(p).team = p.team
-        addTransparency(room, p)
+        addTransparency(p)
     }
 
     room.onRoomLink = url => {
