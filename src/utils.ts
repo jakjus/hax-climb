@@ -46,5 +46,6 @@ export const msToHhmmss = (ms: number | undefined): string => {
 export const addTransparency = (room: RoomObject, p: PlayerObject) => {
     let cf = room.CollisionFlags
     let props = room.getPlayerDiscProperties(p.id)
+    // @ts-ignore
     room.setPlayerDiscProperties(p.id, {...props, cGroup: cf.c1})
 }
