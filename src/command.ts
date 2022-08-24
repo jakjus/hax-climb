@@ -101,6 +101,8 @@ const bb = (p: PlayerAugmented) => {
     room.kickPlayer(p.id, "Bye!", false)
 }
 
+/*
 const testEnd = (p: PlayerAugmented) => {
     room.setPlayerDiscProperties(p.id, {x: 630, y: 220})
 }
+*/
