@@ -15,9 +15,7 @@ export interface ClimbMap {
 let loadedMaps: Array<ClimbMap> = []
 
 export let currentMap: ClimbMap; 
-let mapCounter: number;
 let mapStarted: Date;
-let maxMaps: number;
 
 
 let getNextMapName = () => nextMap?.map?.name || `[Not yet decided]`
@@ -29,7 +27,6 @@ export const initMapCycle = () => {
         setInterval(checkTimer, 5000)
     }
     Object.values(maps).forEach((m: ClimbMap) => loadedMaps.push(m))
-    maxMaps = loadedMaps.length
     nextMap = loadedMaps[0]
     changeMap()
 }

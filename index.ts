@@ -30,6 +30,7 @@ interface RoomArgs {
     geo?: { code: string; lat: number; lon: number; },
     password?: string,
     private?: boolean,
+    proxy?: string,
 }
 
 const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
@@ -42,6 +43,7 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
         noPlayer: true,
         geo: args.geo,
         token: args.token,
+        proxy: args.proxy,
     })
 
     room.setTimeLimit(0)

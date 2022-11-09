@@ -17,12 +17,12 @@
   "description": "Haxball Room Script for Climbing Mod",
   "dependencies": {
     "@keyv/sqlite": "^3.5.3",
-    "haxball.js": "^2.1.1",
+    "haxball.js": "file:../haxball.js",
     "keyv": "^4.3.3",
     "ts-node": "^10.9.1"
   },
   "engines": {
-      "npm": ">=8.6.0",
-      "node": ">=16.0.0"
+    "npm": ">=8.6.0",
+    "node": ">=16.0.0"
   }
 }
