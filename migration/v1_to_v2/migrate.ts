@@ -21,6 +21,7 @@ const append = async () => {
       console.error(e)
     }
     const db = await Database.open(outputDbFilename)
+    //for await (const [key, value] of keyv.iterator()) {
     for await (const [key, value] of keyv.iterator()) {
         console.log('pre:', key, value)
         // Add into `players`
