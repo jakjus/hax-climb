@@ -40,9 +40,10 @@ const showHelp = (p: PlayerObject) => {
                     .join(", ")}`)
 }
 
-const showTime = (p: PlayerAugmented) => {
+const showTime = async (p: PlayerAugmented) => {
     let now = new Date().getTime()
-    let started = new Date(getStats(p).started).getTime()
+    const stats = await getStats(p)
+    let started = new Date(stats.started).getTime()
     let totalMiliseconds = now-started
 
     sendMessage(null, `${p.name} - Current Time: ${msToHhmmss(totalMiliseconds)}`)

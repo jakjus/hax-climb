@@ -1,6 +1,6 @@
 import * as maps from "./maps/maplist";
 import { room } from "../index";
-import { toAug, getStats, updateTime, addTransparency } from "./utils";
+import { toAug, getStats, setStats, updateTime, addTransparency } from "./utils";
 import { loadCheckpoint } from "./checkpoint";
 import { sendMessage } from "./message";
 import { mapDurationMins } from "./settings";
@@ -35,8 +35,9 @@ let diffSecs: number;
 export const changeMap = async () => {
     room.getPlayerList().forEach(po => {
         let pAug = toAug(po)
-        getStats(pAug).stopped = new Date()
+        setStats(pAug, "stopped", new Date().getTime())
     })
+
     if (nextMap) {
         currentMap = nextMap
     }
@@ -44,11 +45,12 @@ export const changeMap = async () => {
     room.stopGame()
     room.setCustomStadium(JSON.stringify(currentMap.map))
     room.startGame()
-    room.getPlayerList().forEach(po => {
+    room.getPlayerList().forEach(async po => {
         let pAug = toAug(po)
-        if (!getStats(pAug) || !getStats(pAug).started) {
-            pAug.mapStats = {...pAug.mapStats, [currentMap.slug]: {started: new Date(), finished: false}}
-        }
+        const stats = await getStats(pAug)
+        const playerMapDefaults = { started: new Date().getTime(), stopped: null, bestTime: null, finished: 0 }
+        // @ts-ignore
+        pAug = {...pAug, ...playerMapDefaults, ...stats}
         updateTime(pAug)
         loadCheckpoint(pAug)
         addTransparency(pAug)

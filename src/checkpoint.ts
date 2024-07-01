@@ -34,7 +34,8 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
         return
     }
 
-    setStats(p, "checkpoint", props)
+    setStats(p, "cpX", props.x)
+    setStats(p, "cpY", props.y)
     const player = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
     // @ts-ignore
     await db.run('INSERT INTO stats(cpX, cpY) VALUES (?, ?) WHERE players.id==?', [props.x, props.y, player.id])
@@ -42,10 +43,11 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
 }
 
 export const loadCheckpoint = async (p: PlayerAugmented) => {
-    await room.setPlayerTeam(p.id, defaultTeam)
-    let pCheckpoint = getStats(p).checkpoint
-    if (pCheckpoint) {
-        room.setPlayerDiscProperties(p.id, pCheckpoint)
+    room.setPlayerTeam(p.id, defaultTeam)
+    const stats = await getStats(p)
+    if (stats.cpX) {
+        // @ts-ignore
+        room.setPlayerDiscProperties(p.id, { x: stats.cpX, y: stats.cpY })
         sendMessage(p, "Checkpoint loaded.")
     } else {
         sendMessage(p, `No checkpoint found. Make a checkpoint with "!save"`)
@@ -59,16 +61,17 @@ export const handleAllFinish = () => {
             return
         }
         let now = new Date().getTime()
-        let started = new Date(getStats(p).started).getTime()
+        const stats = await getStats(p)
+        let started = new Date(stats.started).getTime()
         let totalMiliseconds = now-started
-        let timeDiff = (currentMap.estimatedTimeMins*60*1000-totalMiliseconds)/(currentMap.estimatedTimeMins*60*1000)
-        // will be positive if good time, negative if bad time
+        let timeDiff = (currentMap.estimatedTimeMins*60*1000-totalMiliseconds)/(currentMap.estimatedTimeMins*60*1000)  // will be positive if good time, negative if bad time
         let getPoints = Math.ceil(10*(5**(timeDiff)))
         sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
         p.points += getPoints
-        let pBestTime = getStats(p).bestTime
+        let pBestTime = p.bestTime
         if (!pBestTime || (totalMiliseconds < pBestTime)) {
             setStats(p, "bestTime", totalMiliseconds)
+            p.bestTime = totalMiliseconds
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
         setStats(p, "finished", true)
@@ -78,14 +81,16 @@ export const handleAllFinish = () => {
     })
 }
 
-export const hasFinished = (p: PlayerAugmented) => {
-    let pos = room.getPlayerDiscProperties(p.id)
+export const hasFinished = async (p: PlayerAugmented) => {
+    const pos = room.getPlayerDiscProperties(p.id)
     if ((pos.x > currentMap.bounds.x[0]) && (pos.x < currentMap.bounds.x[1])
-        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1])
-        && (!getStats(p).finished)){
+        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1]))
+        {
+          const stats = await getStats(p)
+          if (!stats.finished) {
             return true
-        }
-        else {
+          } else { return false }
+        } else {
             return false
         }
 }

@@ -1,17 +1,17 @@
-import { PlayerAugmented, PlayerMapStats, players } from "../index"
+import { PlayerAugmented, players } from "../index"
 import { currentMap } from "./mapchooser"
 import { room, db } from "../index"
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
 export const toAug = (p: PlayerObject): PlayerAugmented => players[p.id]
-export const getStats = async (p: PlayerAugmented): PlayerMapStats => {
+export const getStats = async (p: PlayerAugmented) => {
   const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
   const stats = await db.run('SELECT * FROM stats WHERE playerId=?', [playerInDb.id])
   return stats.length > 0 ? stats[0] : null
 }
 
-export const updateTime = async (pAug: PlayerAugmented): void => {
+export const updateTime = async (pAug: PlayerAugmented): Promise<void> => {
   const stats = await getStats(pAug)
     let stopped = stats.stopped
     let started = stats.started
@@ -23,7 +23,7 @@ export const updateTime = async (pAug: PlayerAugmented): void => {
     }
 }
 
-export const setStats = async (p: PlayerAugmented, key: keyof PlayerMapStats, value: PlayerMapStats[typeof key]): Promise<any> => {
+export const setStats = async (p: PlayerAugmented, key: string, value: any): Promise<any> => {
   const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
   return await db.run('UPDATE stats SET ?=? WHERE playerId=? WHERE mapSlug=?', [key, value, playerInDb.id, currentMap.slug])
 }

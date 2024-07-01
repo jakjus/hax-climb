@@ -13,8 +13,8 @@ export const sendMessage = (p: PlayerObject | null, msg: string) => {
 export const playerMessage = (p: PlayerAugmented, msg: string) => {
     let bestTime = `[Not finished]`
     let color = 0xd6d6d6
-    if (getStats(p) && getStats(p).bestTime){
-        bestTime = `[${msToHhmmss(getStats(p).bestTime)}]`
+    if (p.bestTime){
+        bestTime = `[${msToHhmmss(p.bestTime)}]`
         color = 0xf2e5d0
     } 
 
