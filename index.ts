@@ -25,10 +25,10 @@ interface RoomArgs {
     proxy?: string,
 }
 
-export const db = Database.open('db.sqlite')
+export let db: any;
 
-
-const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
+const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
+    db = await Database.open('db.sqlite')
     room = HBInit({
         roomName: args.roomName,
         maxPlayers: 29,

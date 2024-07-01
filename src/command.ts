@@ -48,9 +48,9 @@ const showTime = (p: PlayerAugmented) => {
     sendMessage(null, `${p.name} - Current Time: ${msToHhmmss(totalMiliseconds)}`)
 }
 
-const reset = (p: PlayerAugmented) => {
+const reset = async (p: PlayerAugmented) => {
   const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-  await db.run('UPDATE stats SET started=?, cpX=?, cpY=?, finished=?', [new Date().getTime(), null, 0])
+  await db.run('UPDATE stats SET started=?, cpX=?, cpY=?, finished=? WHERE playerId=?', [new Date().getTime(), null, 0, playerInDb.id])
     room.setPlayerTeam(p.id, 0)
     room.setPlayerTeam(p.id, defaultTeam)
     sendMessage(p, `Your climb was reset.`)
