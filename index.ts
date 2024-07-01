@@ -4,19 +4,11 @@ import { playerMessage } from "./src/message"
 import { loadCheckpoint, handleAllFinish } from "./src/checkpoint"
 import { toAug, addTransparency, getStats, setStats, updateTime } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
-import { keyv } from "./src/db"
 import { initMapCycle, currentMap } from "./src/mapchooser"
-
-export interface PlayerMapStats {
-    started: Date,
-    checkpoint?: DiscPropertiesObject,
-    finished: boolean,
-    bestTime?: number,
-    stopped?: Date,
-}
+import { AsyncDatabase as Database } from "promised-sqlite3";
 
 export interface PlayerAugmented extends PlayerObject {
-    mapStats: { [mapName: string]: PlayerMapStats },
+    bestTime: number,
     points: number,
 }
 
@@ -32,6 +24,9 @@ interface RoomArgs {
     private?: boolean,
     proxy?: string,
 }
+
+export const db = Database.open('db.sqlite')
+
 
 const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
     room = HBInit({
@@ -55,32 +50,26 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
 
 
     room.onPlayerJoin = async p => {
-        let pAug: PlayerAugmented;
         // load from db
-        let data = await keyv.get(p.auth)
-        if (data) {
-            pAug = {...data, ...p}
-            if (!pAug.points) {
-                pAug.points = 0
-            }
-            let stats = getStats(pAug)
-            if (!pAug.mapStats || !stats || !stats.started) {
-                pAug.mapStats = {...pAug.mapStats, [currentMap.slug]: {started: new Date(), finished: false}}
-            }
-            updateTime(pAug)
-            loadCheckpoint(pAug)
-        } else {
-            pAug = {...p, mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}, points: 0}
-        }
+        const player = await db.get('SELECT id, name, points FROM players WHERE auth=?', [p.auth])
+        const playerDefaults = { points: 0 }
+        // @ts-ignore
+        const stats = await db.get('SELECT bestTime, finished FROM stats WHERE playerId=?', [player.id])
+        const playerMapDefaults = { started: new Date().getTime(), stopped: null, bestTime: null, finished: 0 }
+        // @ts-ignore
+        const pAug: PlayerAugmented = {...playerDefaults, ...playerMapDefaults, ...player[0], ...stats[0]}
+        updateTime(pAug)
+        loadCheckpoint(pAug)
         players[p.id] = pAug
         welcomePlayer(room, p)
     }
 
     room.onPlayerLeave = async p => {
-        let pAug = toAug(p)
-        await setStats(pAug, "stopped", new Date())
+        const db = await Database.open('db.sqlite')
+        const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
         // save to db
-        keyv.set(pAug.auth, toAug(p))
+        // @ts-ignore
+        await db.run('UPDATE stats SET stopped=? WHERE playerId=?', [new Date().getTime(), playerInDb.id])
         delete players[p.id]
     }
 

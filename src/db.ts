@@ -1,11 +1,6 @@
-import Keyv from "keyv";
-// @ts-ignore
-import { AsyncDatabase as Database } from "promised-sqlite3";
-
-export const keyv = new Keyv('sqlite://db.sqlite')
+import { db } from "../index"
 
 export const createTables = async (filename: string) => {
-    const db = await Database.open(filename)
     const createStatements = [`CREATE TABLE "players" (
             "id"	INTEGER,
             "auth"	TEXT NOT NULL,
@@ -28,13 +23,12 @@ export const createTables = async (filename: string) => {
     );
     `, 
     `CREATE UNIQUE INDEX auth ON players(auth)`,
+    `CREATE INDEX points ON stats(points DESC)`,
+    `CREATE INDEX bestTime ON stats(bestTime DESC)`,
     `CREATE INDEX mapSlug ON stats(mapSlug)`
     ]
 
     for (const t of createStatements) {
       await db.run(t)
     }
-    await db.close()
 }
-
-keyv.on('error', err => console.log('Keyv Error:', err));

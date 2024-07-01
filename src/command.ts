@@ -4,7 +4,7 @@ import { saveCheckpoint, loadCheckpoint } from "./checkpoint"
 import { defaultTeam } from "./settings"
 import config from "../config"
 import { msToHhmmss, getStats, setStats } from "./utils"
-import { keyv } from "./db"
+import { db } from "../index"
 
 export const isCommand = (msg: string) => msg.trim().startsWith("!")
 export const handleCommand = (p: PlayerAugmented, msg: string) => {
@@ -49,49 +49,35 @@ const showTime = (p: PlayerAugmented) => {
 }
 
 const reset = (p: PlayerAugmented) => {
-    setStats(p, "started", new Date())
-    setStats(p, "checkpoint", undefined)
-    setStats(p, "finished", false)
+  const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
+  await db.run('UPDATE stats SET started=?, cpX=?, cpY=?, finished=?', [new Date().getTime(), null, 0])
     room.setPlayerTeam(p.id, 0)
     room.setPlayerTeam(p.id, defaultTeam)
     sendMessage(p, `Your climb was reset.`)
 }
 
 const showLeaderboards = async (p: PlayerAugmented) => {
-    let leaderboards = []
-    for await (const [_, value] of keyv.iterator()) {
-        let stats = getStats(value)
-        if (!stats) { continue }
-        let pBestTime = stats.bestTime
-        if (pBestTime) {
-            leaderboards.push({name: value.name, time: pBestTime})
-        }
-    };
-    if (leaderboards.length == 0) {
+    const rows = await db.all("SELECT players.name, bestTime FROM stats INNER JOIN players ON stats.playerId=players.id WHERE players.auth=? ORDER BY bestTime DESC LIMIT 10", [p.auth])
+    if (rows.length == 0) {
         sendMessage(p, `Noone has completed the map.`)
         return
     }
-    let leaderboardsStr = leaderboards.sort((a, b) => a.time - b.time).slice(0,10).map((v, i) => `${i+1}. ${v.name} [${msToHhmmss(v.time)}]`)
+    let leaderboards = rows.map((v: any, i: number) => `${i+1}. ${v.name} [${msToHhmmss(v.time)}]`)
     sendMessage(p, `Leaderboards:`)
-    for (let leader of leaderboardsStr) {
+    for (let leader of leaderboards) {
         sendMessage(p, `${leader}`)
     }
 }
 
 const showLeaderboardsPoints = async (p: PlayerAugmented) => {
-    let leaderboards = []
-    for await (const [_, value] of keyv.iterator()) {
-        if (value.points) {
-            leaderboards.push({name: value.name, points: value.points})
-        }
-    };
-    if (leaderboards.length == 0) {
+    const rows = await db.all("SELECT name, points FROM players ORDER BY points DESC LIMIT 10")
+    if (rows.length == 0) {
         sendMessage(p, `Noone has any points.`)
         return
     }
-    let leaderboardsStr = leaderboards.sort((a, b) => b.points - a.points).slice(0,10).map((v, i) => `${i+1}. ${v.name} [${Math.floor(v.points)}⛰️]`)
+    let leaderboards = rows.map((v: any, i: any) => `${i+1}. ${v.name} [${Math.floor(v.points)}⛰️]`)
     sendMessage(p, `Points leaderboards:`)
-    for (let leader of leaderboardsStr) {
+    for (let leader of leaderboards) {
         sendMessage(p, `${leader}`)
     }
 }

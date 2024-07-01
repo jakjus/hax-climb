@@ -3,7 +3,7 @@ import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
 import { PlayerAugmented, room } from "../index"
 import { currentMap } from "./mapchooser"
-import { keyv } from "./db"
+import { db } from "../index"
 
 export const saveCheckpoint = async (p: PlayerAugmented) => {
     if (!isInGame(p)) {
@@ -35,7 +35,9 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
     }
 
     setStats(p, "checkpoint", props)
-    keyv.set(p.auth, p)
+    const player = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
+    // @ts-ignore
+    await db.run('INSERT INTO stats(cpX, cpY) VALUES (?, ?) WHERE players.id==?', [props.x, props.y, player.id])
     sendMessage(p, "✅ Checkpoint saved.")
 }
 
@@ -51,7 +53,7 @@ export const loadCheckpoint = async (p: PlayerAugmented) => {
 }
 
 export const handleAllFinish = () => {
-    room.getPlayerList().filter(p => p.team != 0).forEach(po => {
+    room.getPlayerList().filter(p => p.team != 0).forEach(async po => {
         let p = toAug(po)
         if (!hasFinished(p)){
             return
@@ -70,7 +72,9 @@ export const handleAllFinish = () => {
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
         setStats(p, "finished", true)
-        keyv.set(p.auth, p)
+        const player = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
+        // @ts-ignore
+        await db.run('UPDATE stats SET finished=1 WHERE playerId=?', [player.id])
     })
 }
 
