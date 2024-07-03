@@ -1,11 +1,11 @@
 import { isInGame, msToHhmmss, toAug, getStats, setStats, sleep } from "./utils"
 import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
-import { PlayerAugmented, room } from "../index"
+import { room } from "../index"
 import { currentMap } from "./mapchooser"
 import { db } from "../index"
 
-export const saveCheckpoint = async (p: PlayerAugmented) => {
+export const saveCheckpoint = async (p: PlayerObject) => {
     if (!isInGame(p)) {
         sendMessage(p, "❌ You have to be in game to save a checkpoint.")
         return
@@ -21,6 +21,7 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
 
     for (let i = 0; i < 5; i++) {
         await sleep(1000)
+        sendMessage(p, "⏳ ...")
         props = room.getPlayerDiscProperties(p.id)
         if (!props) { return }
         if ((Math.abs(props.xspeed) + Math.abs(props.yspeed)) > 0.25) {
@@ -36,16 +37,13 @@ export const saveCheckpoint = async (p: PlayerAugmented) => {
 
     setStats(p, "cpX", props.x)
     setStats(p, "cpY", props.y)
-    const player = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-    // @ts-ignore
-    await db.run('INSERT INTO stats(cpX, cpY) VALUES (?, ?) WHERE players.id==?', [props.x, props.y, player.id])
     sendMessage(p, "✅ Checkpoint saved.")
 }
 
-export const loadCheckpoint = async (p: PlayerAugmented) => {
+export const loadCheckpoint = async (p: PlayerObject) => {
     room.setPlayerTeam(p.id, defaultTeam)
     const stats = await getStats(p)
-    if (stats.cpX) {
+    if (stats && stats.cpX) {
         // @ts-ignore
         room.setPlayerDiscProperties(p.id, { x: stats.cpX, y: stats.cpY })
         sendMessage(p, "Checkpoint loaded.")
@@ -55,9 +53,8 @@ export const loadCheckpoint = async (p: PlayerAugmented) => {
 }
 
 export const handleAllFinish = () => {
-    room.getPlayerList().filter(p => p.team != 0).forEach(async po => {
-        let p = toAug(po)
-        if (!hasFinished(p)){
+    room.getPlayerList().filter(p => p.team !== 0).forEach(async p => {
+        if (!inEndZone(p)){
             return
         }
         let now = new Date().getTime()
@@ -67,30 +64,22 @@ export const handleAllFinish = () => {
         let timeDiff = (currentMap.estimatedTimeMins*60*1000-totalMiliseconds)/(currentMap.estimatedTimeMins*60*1000)  // will be positive if good time, negative if bad time
         let getPoints = Math.ceil(10*(5**(timeDiff)))
         sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
-        p.points += getPoints
-        let pBestTime = p.bestTime
+        let pBestTime = stats.bestTime
         if (!pBestTime || (totalMiliseconds < pBestTime)) {
             setStats(p, "bestTime", totalMiliseconds)
-            p.bestTime = totalMiliseconds
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
-        setStats(p, "finished", true)
-        const player = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-        // @ts-ignore
-        await db.run('UPDATE stats SET finished=1 WHERE playerId=?', [player.id])
+        const props = room.getPlayerDiscProperties(p.id)
+        setStats(p, "cpX", props.x)
+        setStats(p, "cpY", props.y)
+        setStats(p, "stopped", now)
     })
 }
 
-export const hasFinished = async (p: PlayerAugmented) => {
+export const endZone = new Set()  // id's of players in endzone
+
+export const inEndZone = (p: PlayerObject) => {
     const pos = room.getPlayerDiscProperties(p.id)
-    if ((pos.x > currentMap.bounds.x[0]) && (pos.x < currentMap.bounds.x[1])
-        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1]))
-        {
-          const stats = await getStats(p)
-          if (!stats.finished) {
-            return true
-          } else { return false }
-        } else {
-            return false
-        }
+    return ((pos.x > currentMap.bounds.x[0]) && (pos.x < currentMap.bounds.x[1])
+        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1]) && (!endZone.has(p.id)))
 }

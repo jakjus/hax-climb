@@ -5,7 +5,7 @@ export const createTables = async (filename: string) => {
             "id"	INTEGER,
             "auth"	TEXT NOT NULL,
             "name"	TEXT,
-            "points"	TEXT,
+            "points"	INTEGER,
             PRIMARY KEY("id" AUTOINCREMENT)
     );`,
     `CREATE TABLE "stats" (
@@ -14,7 +14,6 @@ export const createTables = async (filename: string) => {
             "mapSlug"	TEXT,
             "started"	INTEGER,
             "stopped"	INTEGER,
-            "finished"	INTEGER,
             "bestTime"	INTEGER,
             "cpX"	REAL,
             "cpY"	REAL,

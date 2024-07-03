@@ -1,53 +1,63 @@
-import { PlayerAugmented, players } from "../index"
+import { players } from "../index"
 import { currentMap } from "./mapchooser"
 import { room, db } from "../index"
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
-export const toAug = (p: PlayerObject): PlayerAugmented => players[p.id]
-export const getStats = async (p: PlayerAugmented) => {
-  const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-  const stats = await db.run('SELECT * FROM stats WHERE playerId=?', [playerInDb.id])
-  return stats.length > 0 ? stats[0] : null
+export const getOrCreatePlayer = async (p: PlayerObject): Promise<Partial<PlayerObject>> => {
+  const playerInDb = await db.get('SELECT * FROM players WHERE auth=?', [p.auth])
+  if (!playerInDb) {
+      const res = await db.run('INSERT INTO players(auth, name, points) VALUES (?, ?, ?)', [p.auth, p.name, 0]) 
+      const newPlayer = { id: res.lastID, name: p.name, points: 0 }
+      return newPlayer
+  }
+  return playerInDb
+}
+export const getStats = async (p: PlayerObject) => {
+  const playerInDb = await getOrCreatePlayer(p)
+  const stats = await db.get('SELECT * FROM stats WHERE playerId=? AND mapSlug=?', [playerInDb.id, currentMap.slug])
+  return stats || {}
 }
 
-export const updateTime = async (pAug: PlayerAugmented): Promise<void> => {
-  const stats = await getStats(pAug)
-    let stopped = stats.stopped
-    let started = stats.started
-    if (started && stopped) {
+export const updateTime = async (p: PlayerObject, stats: any): Promise<void> => {
+    if (stats.started && stats.stopped) {
         let dateNow = new Date().getTime()
-        let timeSpent = new Date(stopped).getTime() - new Date(started).getTime()
-        setStats(pAug, "started", dateNow - timeSpent) 
-        setStats(pAug, "stopped", undefined)
+        let timeSpent = new Date(stats.stopped).getTime() - new Date(stats.started).getTime()
+        setStats(p, "started", dateNow - timeSpent) 
+        setStats(p, "stopped", undefined)
     }
 }
 
-export const setStats = async (p: PlayerAugmented, key: string, value: any): Promise<any> => {
+export const setStats = async (p: PlayerObject, key: string, value: any): Promise<any> => {
   const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-  return await db.run('UPDATE stats SET ?=? WHERE playerId=? WHERE mapSlug=?', [key, value, playerInDb.id, currentMap.slug])
+  try {
+    const query = 'UPDATE stats SET '+key+'=? WHERE playerId=? AND mapSlug=?'
+    const updateResult = await db.run(query, [value, playerInDb.id, currentMap.slug])
+    return updateResult
+  } catch(e) {
+    console.error('Error updating', e)
+  }
 }
+
 export const msToHhmmss = (ms: number | undefined): string => {
     if (!ms) { return '-' }
-    let hours = Math.floor(ms/(1000*60*60))
-    let minutes = Math.floor(ms/(1000*60)) - hours*60
-    let seconds = Math.floor(ms/(1000)) - minutes*60 - hours*60*60
-    let miliseconds = ms - seconds*1000 - minutes*60*1000 - hours*60*60*1000
-    let hoursStr = hours.toString()
-    if (hoursStr.length < 2) {
-        hoursStr = "0"+hoursStr
-    }
-    let minutesStr = minutes.toString()
-    if (minutesStr.length < 2) {
-        minutesStr = "0"+minutesStr
-    }
-    let secondsStr = seconds.toString()
-    if (secondsStr.length < 2) {
-        secondsStr = "0"+secondsStr
-    }
-    let milisecondsStr = miliseconds.toString().slice(0,2)
-    let timeString = `${hoursStr}h ${minutesStr}m ${secondsStr}.${milisecondsStr}s`
-    return timeString
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    ms %= (1000 * 60 * 60);
+    
+    const minutes = Math.floor(ms / (1000 * 60));
+    ms %= (1000 * 60);
+    
+    const seconds = Math.floor(ms / 1000);
+    const milliseconds = ms % 1000;
+
+    // Ensure two digits for hours, minutes, and seconds, and three digits for milliseconds
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+    const formattedMilliseconds = String(milliseconds).padStart(3, '0');
+
+    // Return the formatted string
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
 }
 
 export const addTransparency = (p: PlayerObject) => {

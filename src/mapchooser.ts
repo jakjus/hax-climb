@@ -1,6 +1,6 @@
 import * as maps from "./maps/maplist";
 import { room } from "../index";
-import { toAug, getStats, setStats, updateTime, addTransparency } from "./utils";
+import { getStats, setStats, updateTime, addTransparency } from "./utils";
 import { loadCheckpoint } from "./checkpoint";
 import { sendMessage } from "./message";
 import { mapDurationMins } from "./settings";
@@ -33,9 +33,11 @@ export const initMapCycle = () => {
 
 let diffSecs: number;
 export const changeMap = async () => {
-    room.getPlayerList().forEach(po => {
-        let pAug = toAug(po)
-        setStats(pAug, "stopped", new Date().getTime())
+    room.getPlayerList().forEach(async po => {
+        const stats = await getStats(po)
+        if (stats.started && !stats.stopped) {
+          setStats(po, "stopped", new Date().getTime())
+        }
     })
 
     if (nextMap) {
@@ -46,14 +48,14 @@ export const changeMap = async () => {
     room.setCustomStadium(JSON.stringify(currentMap.map))
     room.startGame()
     room.getPlayerList().forEach(async po => {
-        let pAug = toAug(po)
-        const stats = await getStats(pAug)
-        const playerMapDefaults = { started: new Date().getTime(), stopped: null, bestTime: null, finished: 0 }
-        // @ts-ignore
-        pAug = {...pAug, ...playerMapDefaults, ...stats}
-        updateTime(pAug)
-        loadCheckpoint(pAug)
-        addTransparency(pAug)
+        const stats = await getStats(po)
+        if (!stats.started) {
+            setStats(po, "started", new Date().getTime())
+        }
+
+        updateTime(po, stats)
+        loadCheckpoint(po)
+        addTransparency(po)
     })
     announced = 0
     nextMap = undefined;
@@ -82,6 +84,7 @@ export const printOption = (vo: voteOption) => {
     }
     return `${vo.id}. ${vo.option.map.name}`
 }
+
 const startVoting = () => {
     onlyVoteMessage = true
     sendMessage(null, `🗳️ Vote for next map:`)
@@ -120,8 +123,6 @@ const prolong = () => {
 }
 
 const checkTimer = () => {
-    // The line below is very weird, and operating on Dates
-    // is very obscure. Need to change that someday.
     diffSecs = mapDurationMins*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
     if (process.env.DEBUG) {
         diffSecs = mapDurationMins*60/44 - ((new Date().getTime() - mapStarted.getTime())/1000)

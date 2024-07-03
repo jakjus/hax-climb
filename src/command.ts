@@ -3,7 +3,8 @@ import { PlayerAugmented, room } from "../index"
 import { saveCheckpoint, loadCheckpoint } from "./checkpoint"
 import { defaultTeam } from "./settings"
 import config from "../config"
-import { msToHhmmss, getStats, setStats } from "./utils"
+import { currentMap } from "./mapchooser"
+import { msToHhmmss, getStats } from "./utils"
 import { db } from "../index"
 
 export const isCommand = (msg: string) => msg.trim().startsWith("!")
@@ -41,29 +42,30 @@ const showHelp = (p: PlayerObject) => {
 }
 
 const showTime = async (p: PlayerAugmented) => {
-    let now = new Date().getTime()
     const stats = await getStats(p)
-    let started = new Date(stats.started).getTime()
+    let now = stats?.stopped || new Date().getTime()
+    let started = stats.started
     let totalMiliseconds = now-started
+    const timeStr = stats.stopped ? "Finished Time" : "Current Time"
 
-    sendMessage(null, `${p.name} - Current Time: ${msToHhmmss(totalMiliseconds)}`)
+    sendMessage(null, `${p.name} - ${timeStr}: ${msToHhmmss(totalMiliseconds)}`)
 }
 
 const reset = async (p: PlayerAugmented) => {
-  const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-  await db.run('UPDATE stats SET started=?, cpX=?, cpY=?, finished=? WHERE playerId=?', [new Date().getTime(), null, 0, playerInDb.id])
+    const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
+    await db.run('UPDATE stats SET started=?, stopped=?, cpX=?, cpY=? WHERE playerId=? AND mapSlug=?', [new Date().getTime(), null, null, 0, playerInDb.id, currentMap.slug])
     room.setPlayerTeam(p.id, 0)
     room.setPlayerTeam(p.id, defaultTeam)
     sendMessage(p, `Your climb was reset.`)
 }
 
 const showLeaderboards = async (p: PlayerAugmented) => {
-    const rows = await db.all("SELECT players.name, bestTime FROM stats INNER JOIN players ON stats.playerId=players.id WHERE players.auth=? ORDER BY bestTime DESC LIMIT 10", [p.auth])
+    const rows = await db.all("SELECT players.name, bestTime FROM stats INNER JOIN players ON stats.playerId=players.id WHERE stats.mapSlug=? AND bestTime IS NOT NULL ORDER BY bestTime ASC LIMIT 10", [currentMap.slug])
     if (rows.length == 0) {
         sendMessage(p, `Noone has completed the map.`)
         return
     }
-    let leaderboards = rows.map((v: any, i: number) => `${i+1}. ${v.name} [${msToHhmmss(v.time)}]`)
+    let leaderboards = rows.map((v: any, i: number) => `${i+1}. ${v.name} [${msToHhmmss(v.bestTime)}]`)
     sendMessage(p, `Leaderboards:`)
     for (let leader of leaderboards) {
         sendMessage(p, `${leader}`)

@@ -6982,7 +6982,7 @@ export const map = {
   ],
   "playerPhysics": {
     "kickStrength": 0,
-    "acceleration": 0,
+    "acceleration": 1,
     "kickback": 14,
     "gravity": [
       0,
