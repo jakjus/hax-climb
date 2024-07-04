@@ -1,7 +1,7 @@
 import { Headless } from "haxball.js"
 import { isCommand, handleCommand } from "./src/command"
 import { playerMessage } from "./src/message"
-import { loadCheckpoint, handleAllFinish } from "./src/checkpoint"
+import { loadCheckpoint, handleAllFinish, finishedIds } from "./src/checkpoint"
 import { addTransparency, updateTime, getOrCreatePlayer, getStats, setStats } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
 import { initMapCycle, currentMap } from "./src/mapchooser"
@@ -19,6 +19,7 @@ interface RoomArgs {
 }
 
 export let db: any;
+export const idToAuth: { [key: number]: string } = {}  // auth in PlayerObject disappears after initial onPlayerJoin, therefore we need to map it
 
 const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
     db = await Database.open('db.sqlite')
@@ -45,28 +46,20 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
 
 
     room.onPlayerJoin = async p => {
-        // load from db
-        const playerInDb = await getOrCreatePlayer(p)
+      idToAuth[p.id] = p.auth
+        await updateTime(p)
+        await loadCheckpoint(p)
         await db.run('UPDATE players SET name=? WHERE auth=?', [p.name, p.auth])
-        // @ts-ignore
-        const stats = await db.get('SELECT bestTime, started, stopped, finished FROM stats WHERE playerId=? AND mapSlug=?', [playerInDb.id, currentMap.slug])
-        const playerMapDefaults = { started: new Date().getTime(), stopped: null, bestTime: null, finished: 0 }
-        // @ts-ignore
-        const pAug: PlayerAugmented = {...playerMapDefaults, ...playerInDb, ...stats, ...p}
-        if (!stats.started && !stats.finished) {
-            setStats(pAug, "started", new Date().getTime())
-        }
-        updateTime(pAug, stats)
-        loadCheckpoint(pAug)
         welcomePlayer(room, p)
     }
 
     room.onPlayerLeave = async p => {
+      delete idToAuth[p.id]
         const stats = await getStats(p)
-        if (!stats.finished && stats?.started && stats?.stopped) {
-          // if he finished, no need to update "stopped".
+        if (stats && stats.started && !stats.stopped) {
           setStats(p, "stopped", new Date().getTime())
         }
+        finishedIds.delete(p.id)
     }
 
     room.onPlayerChat = (p, msg) => {

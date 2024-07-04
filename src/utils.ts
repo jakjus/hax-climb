@@ -1,11 +1,17 @@
-import { players } from "../index"
 import { currentMap } from "./mapchooser"
-import { room, db } from "../index"
+import { room, db, idToAuth } from "../index"
 
 export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 export const isInGame = (p: PlayerObject) => p.team == 1 || p.team == 2
-export const getOrCreatePlayer = async (p: PlayerObject): Promise<Partial<PlayerObject>> => {
-  const playerInDb = await db.get('SELECT * FROM players WHERE auth=?', [p.auth])
+interface ReadPlayer {
+  id: number,
+  name: string,
+  points: number,
+}
+
+export const getOrCreatePlayer = async (p: PlayerObject): Promise<ReadPlayer> => {
+  const auth = idToAuth[p.id]
+  const playerInDb = await db.get('SELECT * FROM players WHERE auth=?', [auth])
   if (!playerInDb) {
       const res = await db.run('INSERT INTO players(auth, name, points) VALUES (?, ?, ?)', [p.auth, p.name, 0]) 
       const newPlayer = { id: res.lastID, name: p.name, points: 0 }
@@ -13,30 +19,32 @@ export const getOrCreatePlayer = async (p: PlayerObject): Promise<Partial<Player
   }
   return playerInDb
 }
+
 export const getStats = async (p: PlayerObject) => {
   const playerInDb = await getOrCreatePlayer(p)
   const stats = await db.get('SELECT * FROM stats WHERE playerId=? AND mapSlug=?', [playerInDb.id, currentMap.slug])
-  return stats || {}
+  return stats
 }
 
-export const updateTime = async (p: PlayerObject, stats: any): Promise<void> => {
+export const updateTime = async (p: PlayerObject): Promise<void> => {
+    const stats = await getStats(p)
+    const dateNow = new Date().getTime()
     if (stats.started && stats.stopped) {
-        let dateNow = new Date().getTime()
-        let timeSpent = new Date(stats.stopped).getTime() - new Date(stats.started).getTime()
-        setStats(p, "started", dateNow - timeSpent) 
-        setStats(p, "stopped", undefined)
+      console.log('there is started and stopped')
+        const timeSpent = stats.stopped - stats.started
+        console.log('timeSpent', timeSpent)
+        await setStats(p, "started", dateNow - timeSpent) 
+        await setStats(p, "stopped", null)
+    } else if (!stats.started) {
+        await setStats(p, "started", dateNow) 
     }
 }
 
-export const setStats = async (p: PlayerObject, key: string, value: any): Promise<any> => {
-  const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
-  try {
-    const query = 'UPDATE stats SET '+key+'=? WHERE playerId=? AND mapSlug=?'
-    const updateResult = await db.run(query, [value, playerInDb.id, currentMap.slug])
-    return updateResult
-  } catch(e) {
-    console.error('Error updating', e)
-  }
+export const setStats = async (p: PlayerObject, key: string, value: any): Promise<void> => {
+  const auth = idToAuth[p.id]
+  const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [auth])
+  const query = 'UPDATE stats SET '+key+'=? WHERE playerId=? AND mapSlug=?'
+  await db.run(query, [value, playerInDb.id, currentMap.slug])
 }
 
 export const msToHhmmss = (ms: number | undefined): string => {

@@ -1,6 +1,6 @@
 import { sendMessage } from "./message"
-import { PlayerAugmented, room } from "../index"
-import { saveCheckpoint, loadCheckpoint } from "./checkpoint"
+import { room, idToAuth } from "../index"
+import { saveCheckpoint, loadCheckpoint, finishedIds } from "./checkpoint"
 import { defaultTeam } from "./settings"
 import config from "../config"
 import { currentMap } from "./mapchooser"
@@ -8,7 +8,7 @@ import { msToHhmmss, getStats } from "./utils"
 import { db } from "../index"
 
 export const isCommand = (msg: string) => msg.trim().startsWith("!")
-export const handleCommand = (p: PlayerAugmented, msg: string) => {
+export const handleCommand = (p: PlayerObject, msg: string) => {
     let commandText = msg.trim().slice(1)
     let commandName = commandText.split(" ")[0]
     let commandArgs = commandText.split(" ").slice(1)
@@ -19,7 +19,7 @@ export const handleCommand = (p: PlayerAugmented, msg: string) => {
     }
 }
 
-type commandFunc = (p: PlayerAugmented, args: Array<string>) => void
+type commandFunc = (p: PlayerObject, args: Array<string>) => void
 const commands: { [key: string]: commandFunc } = {
     save: (p) => saveCheckpoint(p),
     s: (p) => saveCheckpoint(p),
@@ -32,7 +32,6 @@ const commands: { [key: string]: commandFunc } = {
     topmap: (p) => showLeaderboards(p),
     bb: (p) => bb(p),
     help: (p) => showHelp(p),
-    //testEnd: (room, p) => testEnd(p),
 }
 
 const showHelp = (p: PlayerObject) => {
@@ -41,7 +40,7 @@ const showHelp = (p: PlayerObject) => {
                     .join(", ")}`)
 }
 
-const showTime = async (p: PlayerAugmented) => {
+const showTime = async (p: PlayerObject) => {
     const stats = await getStats(p)
     let now = stats?.stopped || new Date().getTime()
     let started = stats.started
@@ -51,15 +50,17 @@ const showTime = async (p: PlayerAugmented) => {
     sendMessage(null, `${p.name} - ${timeStr}: ${msToHhmmss(totalMiliseconds)}`)
 }
 
-const reset = async (p: PlayerAugmented) => {
-    const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [p.auth])
+const reset = async (p: PlayerObject) => {
+  const auth = idToAuth[p.id]
+    const playerInDb = await db.get('SELECT id FROM players WHERE auth=?', [auth])
     await db.run('UPDATE stats SET started=?, stopped=?, cpX=?, cpY=? WHERE playerId=? AND mapSlug=?', [new Date().getTime(), null, null, 0, playerInDb.id, currentMap.slug])
+    finishedIds.delete(p.id)
     room.setPlayerTeam(p.id, 0)
     room.setPlayerTeam(p.id, defaultTeam)
     sendMessage(p, `Your climb was reset.`)
 }
 
-const showLeaderboards = async (p: PlayerAugmented) => {
+const showLeaderboards = async (p: PlayerObject) => {
     const rows = await db.all("SELECT players.name, bestTime FROM stats INNER JOIN players ON stats.playerId=players.id WHERE stats.mapSlug=? AND bestTime IS NOT NULL ORDER BY bestTime ASC LIMIT 10", [currentMap.slug])
     if (rows.length == 0) {
         sendMessage(p, `Noone has completed the map.`)
@@ -72,7 +73,7 @@ const showLeaderboards = async (p: PlayerAugmented) => {
     }
 }
 
-const showLeaderboardsPoints = async (p: PlayerAugmented) => {
+const showLeaderboardsPoints = async (p: PlayerObject) => {
     const rows = await db.all("SELECT name, points FROM players ORDER BY points DESC LIMIT 10")
     if (rows.length == 0) {
         sendMessage(p, `Noone has any points.`)
@@ -86,12 +87,6 @@ const showLeaderboardsPoints = async (p: PlayerAugmented) => {
 }
 
 
-const bb = (p: PlayerAugmented) => {
+const bb = (p: PlayerObject) => {
     room.kickPlayer(p.id, "Bye!", false)
 }
-
-/*
-const testEnd = (p: PlayerAugmented) => {
-    room.setPlayerDiscProperties(p.id, {x: 630, y: 220})
-}
-*/

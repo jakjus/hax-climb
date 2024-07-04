@@ -36,7 +36,8 @@ export const changeMap = async () => {
     room.getPlayerList().forEach(async po => {
         const stats = await getStats(po)
         if (stats.started && !stats.stopped) {
-          setStats(po, "stopped", new Date().getTime())
+          console.log('setting stopped')
+          await setStats(po, "stopped", new Date().getTime())
         }
     })
 
@@ -48,12 +49,7 @@ export const changeMap = async () => {
     room.setCustomStadium(JSON.stringify(currentMap.map))
     room.startGame()
     room.getPlayerList().forEach(async po => {
-        const stats = await getStats(po)
-        if (!stats.started) {
-            setStats(po, "started", new Date().getTime())
-        }
-
-        updateTime(po, stats)
+        await updateTime(po)
         loadCheckpoint(po)
         addTransparency(po)
     })

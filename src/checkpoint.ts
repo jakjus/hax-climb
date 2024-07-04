@@ -1,13 +1,17 @@
-import { isInGame, msToHhmmss, toAug, getStats, setStats, sleep } from "./utils"
+import { isInGame, msToHhmmss, getStats, setStats, sleep } from "./utils"
 import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
 import { room } from "../index"
 import { currentMap } from "./mapchooser"
-import { db } from "../index"
 
 export const saveCheckpoint = async (p: PlayerObject) => {
     if (!isInGame(p)) {
         sendMessage(p, "❌ You have to be in game to save a checkpoint.")
+        return
+    }
+    const stats = await getStats(p)
+    if (!stats.started) {
+        sendMessage(p, "❌ You have finished this map. You have to !resetclimb to save a checkpoint.")
         return
     }
 
@@ -57,6 +61,7 @@ export const handleAllFinish = () => {
         if (!inEndZone(p)){
             return
         }
+        finishedIds.add(p.id)
         let now = new Date().getTime()
         const stats = await getStats(p)
         let started = new Date(stats.started).getTime()
@@ -69,17 +74,17 @@ export const handleAllFinish = () => {
             setStats(p, "bestTime", totalMiliseconds)
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
-        const props = room.getPlayerDiscProperties(p.id)
-        setStats(p, "cpX", props.x)
-        setStats(p, "cpY", props.y)
-        setStats(p, "stopped", now)
+        setStats(p, "cpX", null)
+        setStats(p, "cpY", null)
+        setStats(p, "started", null)
+        setStats(p, "stopped", null)
     })
 }
 
-export const endZone = new Set()  // id's of players in endzone
+export const finishedIds = new Set()  // id's of players in endzone
 
 export const inEndZone = (p: PlayerObject) => {
     const pos = room.getPlayerDiscProperties(p.id)
     return ((pos.x > currentMap.bounds.x[0]) && (pos.x < currentMap.bounds.x[1])
-        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1]) && (!endZone.has(p.id)))
+        && (pos.y > currentMap.bounds.y[0]) && (pos.y < currentMap.bounds.y[1]) && (!finishedIds.has(p.id)))
 }
