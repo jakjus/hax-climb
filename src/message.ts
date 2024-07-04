@@ -15,7 +15,7 @@ export const playerMessage = async (p: PlayerObject, msg: string) => {
     let color = 0xd6d6d6
     const stats = await getStats(p)
     const player = await getOrCreatePlayer(p)
-    if (stats.bestTime){
+    if (stats && stats.bestTime){
         bestTime = `[${msToHhmmss(stats.bestTime)}]`
         color = 0xf2e5d0
     } 

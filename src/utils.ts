@@ -23,19 +23,21 @@ export const getOrCreatePlayer = async (p: PlayerObject): Promise<ReadPlayer> =>
 export const getStats = async (p: PlayerObject) => {
   const playerInDb = await getOrCreatePlayer(p)
   const stats = await db.get('SELECT * FROM stats WHERE playerId=? AND mapSlug=?', [playerInDb.id, currentMap.slug])
+  if (!stats) {
+    await db.run('INSERT INTO stats(playerId, mapSlug) VALUES (?, ?)', [playerInDb.id, currentMap.slug])
+    return { playerId: playerInDb.id, mapSlug: currentMap.slug }
+  }
   return stats
 }
 
 export const updateTime = async (p: PlayerObject): Promise<void> => {
     const stats = await getStats(p)
     const dateNow = new Date().getTime()
-    if (stats.started && stats.stopped) {
-      console.log('there is started and stopped')
+    if (stats && stats.started && stats.stopped) {
         const timeSpent = stats.stopped - stats.started
-        console.log('timeSpent', timeSpent)
         await setStats(p, "started", dateNow - timeSpent) 
         await setStats(p, "stopped", null)
-    } else if (!stats.started) {
+    } else if (!stats || !stats.started) {
         await setStats(p, "started", dateNow) 
     }
 }

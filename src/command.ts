@@ -42,10 +42,11 @@ const showHelp = (p: PlayerObject) => {
 
 const showTime = async (p: PlayerObject) => {
     const stats = await getStats(p)
-    let now = stats?.stopped || new Date().getTime()
+    let now = new Date().getTime()
     let started = stats.started
     let totalMiliseconds = now-started
-    const timeStr = stats.stopped ? "Finished Time" : "Current Time"
+    if (!started) { totalMiliseconds = 0 }
+    const timeStr = "Current Time"
 
     sendMessage(null, `${p.name} - ${timeStr}: ${msToHhmmss(totalMiliseconds)}`)
 }

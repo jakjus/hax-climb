@@ -1,7 +1,7 @@
 import { isInGame, msToHhmmss, getStats, setStats, sleep } from "./utils"
 import { defaultTeam } from "./settings"
 import { sendMessage } from "./message"
-import { room } from "../index"
+import { room, db, idToAuth } from "../index"
 import { currentMap } from "./mapchooser"
 
 export const saveCheckpoint = async (p: PlayerObject) => {
@@ -64,16 +64,19 @@ export const handleAllFinish = () => {
         finishedIds.add(p.id)
         let now = new Date().getTime()
         const stats = await getStats(p)
-        let started = new Date(stats.started).getTime()
+        let started = stats.started
         let totalMiliseconds = now-started
         let timeDiff = (currentMap.estimatedTimeMins*60*1000-totalMiliseconds)/(currentMap.estimatedTimeMins*60*1000)  // will be positive if good time, negative if bad time
         let getPoints = Math.ceil(10*(5**(timeDiff)))
+        db.run('UPDATE players SET points = points + ? WHERE auth=?', [getPoints, idToAuth[p.id]])
         sendMessage(null, `🏁 ${p.name} has finished the climb. Final Time: ${msToHhmmss(totalMiliseconds)} [+⛰️ ${getPoints}] `)
         let pBestTime = stats.bestTime
         if (!pBestTime || (totalMiliseconds < pBestTime)) {
             setStats(p, "bestTime", totalMiliseconds)
             sendMessage(null, `🏁 ${p.name} has a New Personal Best!`)
         }
+
+        // Delete checkpoint and times
         setStats(p, "cpX", null)
         setStats(p, "cpY", null)
         setStats(p, "started", null)

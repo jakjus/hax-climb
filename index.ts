@@ -46,7 +46,7 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
 
 
     room.onPlayerJoin = async p => {
-      idToAuth[p.id] = p.auth
+        idToAuth[p.id] = p.auth
         await updateTime(p)
         await loadCheckpoint(p)
         await db.run('UPDATE players SET name=? WHERE auth=?', [p.name, p.auth])
@@ -54,12 +54,12 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
     }
 
     room.onPlayerLeave = async p => {
-      delete idToAuth[p.id]
         const stats = await getStats(p)
         if (stats && stats.started && !stats.stopped) {
           setStats(p, "stopped", new Date().getTime())
         }
         finishedIds.delete(p.id)
+        delete idToAuth[p.id]
     }
 
     room.onPlayerChat = (p, msg) => {

@@ -33,13 +33,12 @@ export const initMapCycle = () => {
 
 let diffSecs: number;
 export const changeMap = async () => {
-    room.getPlayerList().forEach(async po => {
+    for await (const po of room.getPlayerList()) {
         const stats = await getStats(po)
         if (stats.started && !stats.stopped) {
-          console.log('setting stopped')
           await setStats(po, "stopped", new Date().getTime())
         }
-    })
+    }
 
     if (nextMap) {
         currentMap = nextMap
@@ -50,7 +49,7 @@ export const changeMap = async () => {
     room.startGame()
     room.getPlayerList().forEach(async po => {
         await updateTime(po)
-        loadCheckpoint(po)
+        await loadCheckpoint(po)
         addTransparency(po)
     })
     announced = 0
