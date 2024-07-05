@@ -1,6 +1,6 @@
 <h1 align="center">⛰️ hax-climb</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/npm-%3E%3D8.6.0-blue.svg" />
   <img src="https://img.shields.io/badge/node-%3E%3D16.0.0-blue.svg" />
   <a href="https://github.com/jakjus/hax-climb#readme" target="_blank">
@@ -14,7 +14,7 @@
   </a>
 </p>
 
-> Haxball Room Script for Climbing Mod (map and gameplay by Winky)
+> Haxball Room Script for Climbing Mod (initial map & gameplay by Winky)
 
 ![Preview](./preview.png)
 
@@ -41,7 +41,7 @@ Rename `config.example.ts` with `config.ts`. Insert **token** from https://haxba
 // config.ts
 
 export default {
-    roomName: `🌕   HaxClimb v1.1 by jakjus`,
+    roomName: `🌕   HaxClimb v2.0 by jakjus`,
     token: `YOUR_TOKEN_HERE`,
 }
 ```
@@ -58,11 +58,16 @@ To add a new map, follow the format in `src/maps/jakjus-tower.ts`. Then, add app
 Some script settings can be changed in `src/settings.ts`.
 
 ### Migration (optional)
-*Only if you upgrade from v0.x.x to v1.x.x and some data exists!*
+*Only if you upgrade versions and some data exists!*
 
 To migrate data (database) from v0.x.x to v1.x.x:
 ```
-npm run migrate
+npm run migrate_v1
+```
+
+To migrate data (database) from v1.x.x to v1.x.x:
+```
+npm run migrate_v2
 ```
 
 ## Features
@@ -73,7 +78,6 @@ npm run migrate
 - [x] SQLite database (persistent stats)
 - [x] Multiple maps with separate leaderboards
 - [x] Map Voting
-- [ ] Multiple databases
 
 
 ## Author

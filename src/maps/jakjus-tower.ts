@@ -1,8 +1,8 @@
 export const slug = "jakjus-tower"
-export const estimatedTimeMins = 2
+export const estimatedTimeMins = 5
 export const bounds = {x: [-1000, -900], y: [-500, -450]}
 export const map = {
-  "name": "[Easy] Jakjus' Tower",
+  "name": "[Medium] Jakjus' Tower",
   "width": 1400,
   "height": 800,
   "bg": {
@@ -5391,8 +5391,8 @@ export const map = {
       "radius": 10,
       "invMass": 0,
       "pos": [
-        -591,
-        -272
+        -589,
+        -270
       ],
       "color": "transparent",
       "cMask": [

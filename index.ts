@@ -1,26 +1,12 @@
 import { Headless } from "haxball.js"
 import { isCommand, handleCommand } from "./src/command"
 import { playerMessage } from "./src/message"
-import { loadCheckpoint, handleAllFinish } from "./src/checkpoint"
-import { toAug, addTransparency, getStats, setStats, updateTime } from "./src/utils"
+import { loadCheckpoint, handleAllFinish, finishedIds } from "./src/checkpoint"
+import { createTables } from "./src/db"
+import { addTransparency, updateTime, getOrCreatePlayer, getStats, setStats } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
-import { keyv } from "./src/db"
 import { initMapCycle, currentMap } from "./src/mapchooser"
-
-export interface PlayerMapStats {
-    started: Date,
-    checkpoint?: DiscPropertiesObject,
-    finished: boolean,
-    bestTime?: number,
-    stopped?: Date,
-}
-
-export interface PlayerAugmented extends PlayerObject {
-    mapStats: { [mapName: string]: PlayerMapStats },
-    points: number,
-}
-
-export let players: { [playerId: number]: PlayerAugmented } = {}
+import { AsyncDatabase as Database } from "promised-sqlite3";
 
 export let room: RoomObject;
 
@@ -33,7 +19,20 @@ interface RoomArgs {
     proxy?: string,
 }
 
-const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
+export let db: any;
+export const idToAuth: { [key: number]: string } = {}  // auth in PlayerObject disappears after initial onPlayerJoin, therefore we need to map it
+
+const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
+    db = await Database.open('db.sqlite')
+    // Enable for DB SQL Debug:
+    // db.inner.on("trace", (sql: any) => console.log("[TRACE]", sql));
+    try { 
+      console.log('Creating DB...')
+      await createTables(db)
+    } catch (e) {
+      console.log('\nDB tables already created.')
+    }
+
     room = HBInit({
         roomName: args.roomName,
         maxPlayers: 29,
@@ -55,46 +54,32 @@ const roomBuilder = (HBInit: Headless, args: RoomArgs) => {
 
 
     room.onPlayerJoin = async p => {
-        let pAug: PlayerAugmented;
-        // load from db
-        let data = await keyv.get(p.auth)
-        if (data) {
-            pAug = {...data, ...p}
-            if (!pAug.points) {
-                pAug.points = 0
-            }
-            let stats = getStats(pAug)
-            if (!pAug.mapStats || !stats || !stats.started) {
-                pAug.mapStats = {...pAug.mapStats, [currentMap.slug]: {started: new Date(), finished: false}}
-            }
-            updateTime(pAug)
-            loadCheckpoint(pAug)
-        } else {
-            pAug = {...p, mapStats: {[currentMap.slug]: {started: new Date(), finished: false}}, points: 0}
-        }
-        players[p.id] = pAug
+        idToAuth[p.id] = p.auth
+        await updateTime(p)
+        await loadCheckpoint(p)
+        await db.run('UPDATE players SET name=? WHERE auth=?', [p.name, p.auth])
         welcomePlayer(room, p)
     }
 
     room.onPlayerLeave = async p => {
-        let pAug = toAug(p)
-        await setStats(pAug, "stopped", new Date())
-        // save to db
-        keyv.set(pAug.auth, toAug(p))
-        delete players[p.id]
+        const stats = await getStats(p)
+        if (stats && stats.started && !stats.stopped) {
+          setStats(p, "stopped", new Date().getTime())
+        }
+        finishedIds.delete(p.id)
+        delete idToAuth[p.id]
     }
 
     room.onPlayerChat = (p, msg) => {
         if (isCommand(msg)){
-            handleCommand(toAug(p), msg)
+            handleCommand(p, msg)
             return false
         }
-        playerMessage(toAug(p), msg)
+        playerMessage(p, msg)
         return false
     }
 
     room.onPlayerTeamChange = p => {
-        toAug(p).team = p.team
         addTransparency(p)
     }
 

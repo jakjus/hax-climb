@@ -2,7 +2,7 @@ export const slug = "winkys-challenge"
 export const estimatedTimeMins = 20
 export const bounds = {x: [610, 650], y: [220, 255]}
 export const map = {
-  "name": "[Hard] Winky's Challenge",
+  "name": "[Medium] Winky's Challenge",
   "width": 1400,
   "height": 800,
   "bg": {
