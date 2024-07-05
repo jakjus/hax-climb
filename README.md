@@ -41,7 +41,7 @@ Rename `config.example.ts` with `config.ts`. Insert **token** from https://haxba
 // config.ts
 
 export default {
-    roomName: `🌕   HaxClimb v1.1 by jakjus`,
+    roomName: `🌕   HaxClimb v2.0 by jakjus`,
     token: `YOUR_TOKEN_HERE`,
 }
 ```
