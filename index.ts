@@ -2,6 +2,7 @@ import { Headless } from "haxball.js"
 import { isCommand, handleCommand } from "./src/command"
 import { playerMessage } from "./src/message"
 import { loadCheckpoint, handleAllFinish, finishedIds } from "./src/checkpoint"
+import { createTables } from "./src/db"
 import { addTransparency, updateTime, getOrCreatePlayer, getStats, setStats } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
 import { initMapCycle, currentMap } from "./src/mapchooser"
@@ -24,6 +25,12 @@ export const idToAuth: { [key: number]: string } = {}  // auth in PlayerObject d
 const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
     db = await Database.open('db.sqlite')
     db.inner.on("trace", (sql: any) => console.log("[TRACE]", sql));
+    try { 
+      console.log('Creating DB...')
+      await createTables(db)
+    } catch (e) {
+      console.log('\nDB tables already created.')
+    }
 
     room = HBInit({
         roomName: args.roomName,

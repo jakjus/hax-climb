@@ -28,8 +28,9 @@ const commands: { [key: string]: commandFunc } = {
     time: (p) => showTime(p),
     t: (p) => showTime(p),
     resetclimb: (p) => reset(p),
-    top: (p) => showLeaderboardsPoints(p),
-    topmap: (p) => showLeaderboards(p),
+    top: (p) => showLeaderboards(p),
+    topall: (p) => showLeaderboardsPoints(p),
+    discord: (p) => showDiscord(p),
     bb: (p) => bb(p),
     help: (p) => showHelp(p),
 }
@@ -38,6 +39,10 @@ const showHelp = (p: PlayerObject) => {
     sendMessage(p, `${config.roomName}. Commands: ${Object.keys(commands)
                     .map(k => "!"+k)
                     .join(", ")}`)
+}
+
+const showDiscord = (p: PlayerObject) => {
+    sendMessage(p, `HaxClimb Global Discord: discord.gg/ZaarExwMjf`)
 }
 
 const showTime = async (p: PlayerObject) => {

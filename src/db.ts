@@ -1,6 +1,6 @@
-import { db } from "../index"
+import { db } from '../index'
 
-export const createTables = async (filename: string) => {
+export const createTables = async (db: any) => {
     const createStatements = [`CREATE TABLE "players" (
             "id"	INTEGER,
             "auth"	TEXT NOT NULL,
