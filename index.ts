@@ -24,7 +24,8 @@ export const idToAuth: { [key: number]: string } = {}  // auth in PlayerObject d
 
 const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
     db = await Database.open('db.sqlite')
-    db.inner.on("trace", (sql: any) => console.log("[TRACE]", sql));
+    // Enable for DB SQL Debug:
+    // db.inner.on("trace", (sql: any) => console.log("[TRACE]", sql));
     try { 
       console.log('Creating DB...')
       await createTables(db)
