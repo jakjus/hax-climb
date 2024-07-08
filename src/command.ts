@@ -3,7 +3,7 @@ import { room, idToAuth } from "../index"
 import { saveCheckpoint, loadCheckpoint, finishedIds } from "./checkpoint"
 import { defaultTeam } from "./settings"
 import config from "../config"
-import { currentMap } from "./mapchooser"
+import { currentMap, addVotemap, showTimeleft } from "./mapchooser"
 import { msToHhmmss, getStats } from "./utils"
 import { db } from "../index"
 
@@ -30,6 +30,8 @@ const commands: { [key: string]: commandFunc } = {
     resetclimb: (p) => reset(p),
     top: (p) => showLeaderboards(p),
     topall: (p) => showLeaderboardsPoints(p),
+    votemap: (p) => addVotemap(p),
+    timeleft: (p) => showTimeleft(p),
     discord: (p) => showDiscord(p),
     dc: (p) => showDiscord(p),
     bb: (p) => bb(p),

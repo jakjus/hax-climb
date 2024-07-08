@@ -3,9 +3,9 @@ import { isCommand, handleCommand } from "./src/command"
 import { playerMessage } from "./src/message"
 import { loadCheckpoint, handleAllFinish, finishedIds } from "./src/checkpoint"
 import { createTables } from "./src/db"
-import { addTransparency, updateTime, getOrCreatePlayer, getStats, setStats } from "./src/utils"
+import { addTransparency, updateTime, getStats, setStats } from "./src/utils"
 import { welcomePlayer } from "./src/welcome"
-import { initMapCycle, currentMap } from "./src/mapchooser"
+import { initMapCycle, wantVotemapIds } from "./src/mapchooser"
 import { AsyncDatabase as Database } from "promised-sqlite3";
 
 export let room: RoomObject;
@@ -68,6 +68,7 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
         }
         finishedIds.delete(p.id)
         delete idToAuth[p.id]
+        wantVotemapIds.delete(p.id)
     }
 
     room.onPlayerChat = (p, msg) => {

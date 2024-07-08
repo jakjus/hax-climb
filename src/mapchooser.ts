@@ -17,6 +17,12 @@ let loadedMaps: Array<ClimbMap> = []
 export let currentMap: ClimbMap; 
 let mapStarted: Date;
 
+export const showTimeleft = (p: PlayerObject) => {
+    const diffSecs = mapDurationMins*60 - ((new Date().getTime() - mapStarted.getTime())/1000)
+    let diffMins = Math.ceil(diffSecs/60)
+    sendMessage(p, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
+}
+
 
 let getNextMapName = () => nextMap?.map?.name || `[Not yet decided]`
 
@@ -58,6 +64,30 @@ export const changeMap = async () => {
 
 let announced = 0
 let hasVoted: number[] = []
+export let wantVotemapIds = new Set()
+
+export const addVotemap = (p: PlayerObject) => {
+  if (announced > 0) {
+    sendMessage(p, `Voting in progress or finished. You cannot !votemap now.`)
+    return
+  }
+  const have = wantVotemapIds.size
+  const needed = Math.ceil(room.getPlayerList().length/2)
+  if (!wantVotemapIds.has(p.id)) {
+    wantVotemapIds.add(p.id)
+    if (have+1 >= needed) {
+      sendMessage(null, `${p.name} wants to change map. (${have+1}/${needed})`)
+      sendMessage(null, `Votemap successful. (${have+1}/${needed})`)
+      announced = 1
+      mapStarted = new Date(new Date().getTime() - (mapDurationMins*60-2*60)*1000)  // when mapDurationMins is 15: set mapStarted as 13 mins ago (leaves 2 mins left and starts voting)
+    } else {
+      sendMessage(null, `${p.name} wants to change map. Use !votemap to join and start voting. (${have+1}/${needed})`)
+    }
+  } else {
+    sendMessage(p, `You already used !votemap`)
+    return
+  }
+}
 
 type voteOption = { id: number, option: ClimbMap, votes: number }
 export let voteOptions: voteOption[]
@@ -81,6 +111,7 @@ export const printOption = (vo: voteOption) => {
 }
 
 const startVoting = () => {
+    wantVotemapIds = new Set()
     onlyVoteMessage = true
     sendMessage(null, `🗳️ Vote for next map:`)
     let prolongOption = {id: 1, option: currentMap, votes: 0}
@@ -123,11 +154,11 @@ const checkTimer = () => {
         diffSecs = mapDurationMins*60/44 - ((new Date().getTime() - mapStarted.getTime())/1000)
     }
     let diffMins = Math.ceil(diffSecs/60)
-    if (announced == 0 && diffSecs < 10*60) {
+    if (announced == 0 && diffSecs < 5*60) {
         sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
         announced += 1
     }
-    if (announced == 1 && diffSecs < 5*60) {
+    if (announced == 1 && diffSecs < 2*60) {
         sendMessage(null, `${diffMins} minutes left. Next map: ${getNextMapName()}`)
         startVoting()
         setTimeout(() => endVoting(), 20*1000)
