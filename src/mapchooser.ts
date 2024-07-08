@@ -57,13 +57,13 @@ export const changeMap = async () => {
 }
 
 let announced = 0
-let hasVoted: string[] = []
+let hasVoted: number[] = []
 
 type voteOption = { id: number, option: ClimbMap, votes: number }
 export let voteOptions: voteOption[]
 export const handleVote = (p: PlayerObject, opt: voteOption) => {
-    if (!hasVoted.includes(p.auth)) {
-        hasVoted.push(p.auth)
+    if (!hasVoted.includes(p.id)) {
+        hasVoted.push(p.id)
         opt.votes += 1
         sendMessage(null, `${p.name} has voted for: ${printOption(opt)}`)
     } else {

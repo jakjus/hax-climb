@@ -31,6 +31,7 @@ const commands: { [key: string]: commandFunc } = {
     top: (p) => showLeaderboards(p),
     topall: (p) => showLeaderboardsPoints(p),
     discord: (p) => showDiscord(p),
+    dc: (p) => showDiscord(p),
     bb: (p) => bb(p),
     help: (p) => showHelp(p),
 }
@@ -42,7 +43,7 @@ const showHelp = (p: PlayerObject) => {
 }
 
 const showDiscord = (p: PlayerObject) => {
-    sendMessage(p, `HaxClimb Global Discord: discord.gg/ZaarExwMjf`)
+    sendMessage(null, `HaxClimb Global Discord: discord.gg/ZaarExwMjf`)
 }
 
 const showTime = async (p: PlayerObject) => {

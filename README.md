@@ -65,7 +65,7 @@ To migrate data (database) from v0.x.x to v1.x.x:
 npm run migrate_v1
 ```
 
-To migrate data (database) from v1.x.x to v1.x.x:
+To migrate data (database) from v1.x.x to v2.x.x:
 ```
 npm run migrate_v2
 ```
