@@ -4877,11 +4877,11 @@ export const map = {
       ]
     },
     {
-      "radius": 36,
+      "radius": 38,
       "invMass": 0,
       "pos": [
-        -717,
-        -318
+        -722,
+        -330
       ],
       "color": "transparent",
       "cMask": [
