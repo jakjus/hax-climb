@@ -1,6 +1,6 @@
 <h1 align="center">⛰️ hax-climb</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.1.0-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/npm-%3E%3D8.6.0-blue.svg" />
   <img src="https://img.shields.io/badge/node-%3E%3D16.0.0-blue.svg" />
   <a href="https://github.com/jakjus/hax-climb#readme" target="_blank">
@@ -41,7 +41,7 @@ Rename `config.example.ts` with `config.ts`. Insert **token** from https://haxba
 // config.ts
 
 export default {
-    roomName: `🌕   HaxClimb v2.0 by jakjus`,
+    roomName: `🌕   HaxClimb v2.1.0 by jakjus`,
     token: `YOUR_TOKEN_HERE`,
 }
 ```
