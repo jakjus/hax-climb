@@ -212,7 +212,10 @@ export const map = {
                             "wall"
                     ],
                     "bias": 0,
-                    "color": "f7f725"
+                    "color": "f7f725",
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -570,
@@ -226,7 +229,10 @@ export const map = {
                             "wall"
                     ],
                     "bias": 30,
-                    "color": "f7f725"
+                    "color": "f7f725",
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 200,
@@ -434,7 +440,7 @@ export const map = {
                     "color": "f83003"
             },
             {
-                    "x": -570,
+                    "x": -560,
                     "y": 340,
                     "cMask": [
                             "c1"
@@ -446,10 +452,13 @@ export const map = {
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": 420,
-                    "vis": false
+                    "vis": false,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
-                    "x": -570,
+                    "x": -560,
                     "y": 350,
                     "cMask": [
                             "c1"
@@ -461,7 +470,10 @@ export const map = {
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": 420,
-                    "vis": false
+                    "vis": false,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1000,
@@ -2255,392 +2267,476 @@ export const map = {
                     "y": 182,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 249,
                     "y": 112,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 227,
                     "y": 198,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 249,
                     "y": 112,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 227,
                     "y": 198,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 220,
                     "y": 177,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 227,
                     "y": 198,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 240,
                     "y": 181,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1127,
                     "y": 237,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1110,
                     "y": 190,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1155,
                     "y": 204,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1110,
                     "y": 190,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1122,
                     "y": 265,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1102,
                     "y": 278,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1102,
                     "y": 265,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": -1117,
                     "y": 282,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 752,
                     "y": 385,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 752,
                     "y": 449,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 664,
                     "y": 368,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 654,
                     "y": 425,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 786,
                     "y": 384,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 797,
                     "y": 441,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 698,
                     "y": 383,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 694,
                     "y": 440,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 707,
                     "y": 405,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 648,
                     "y": 406,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 16,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 787,
                     "y": 384,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "x": 808,
                     "y": 438,
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
                     ],
                     "color": "535663",
                     "curve": 26,
-                    "vis": true
+                    "vis": true,
+                    "_data": {
+                            "mirror": {}
+                    }
             }
     ],
     "segments": [
@@ -2737,7 +2833,27 @@ export const map = {
                             "wall"
                     ],
                     "bias": 0,
-                    "y": 38
+                    "y": 38,
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -570,
+                                            350
+                                    ],
+                                    "b": [
+                                            -570,
+                                            480
+                                    ],
+                                    "radius": null,
+                                    "center": [
+                                            null,
+                                            null
+                                    ],
+                                    "from": null,
+                                    "to": null
+                            }
+                    }
             },
             {
                     "v0": 16,
@@ -2862,7 +2978,21 @@ export const map = {
                     ],
                     "bias": 420,
                     "y": 300,
-                    "x": -570
+                    "x": -560,
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -560,
+                                            340
+                                    ],
+                                    "b": [
+                                            -560,
+                                            350
+                                    ],
+                                    "curve": 0
+                            }
+                    }
             },
             {
                     "v0": 33,
@@ -3851,11 +3981,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            275,
+                                            182
+                                    ],
+                                    "b": [
+                                            249,
+                                            112
+                                    ],
+                                    "curve": 16,
+                                    "radius": 268.27245457369156,
+                                    "center": [
+                                            511.03794028344737,
+                                            54.500193609005265
+                                    ],
+                                    "from": 2.6463304291294873,
+                                    "to": 2.9255831094485796
+                            }
+                    }
             },
             {
                     "v0": 177,
@@ -3865,11 +4016,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            227,
+                                            198
+                                    ],
+                                    "b": [
+                                            249,
+                                            112
+                                    ],
+                                    "curve": 26,
+                                    "radius": 197.30817520195714,
+                                    "center": [
+                                            424.2534625942187,
+                                            202.6462346171257
+                                    ],
+                                    "from": -3.118042366737704,
+                                    "to": -2.6642567612191788
+                            }
+                    }
             },
             {
                     "v0": 179,
@@ -3879,11 +4051,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            227,
+                                            198
+                                    ],
+                                    "b": [
+                                            220,
+                                            177
+                                    ],
+                                    "curve": 26,
+                                    "radius": 49.20168897572976,
+                                    "center": [
+                                            268.9804966799836,
+                                            172.33983444000546
+                                    ],
+                                    "from": 2.592949296433888,
+                                    "to": 3.046734901952414
+                            }
+                    }
             },
             {
                     "v0": 181,
@@ -3893,11 +4086,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            227,
+                                            198
+                                    ],
+                                    "b": [
+                                            240,
+                                            181
+                                    ],
+                                    "curve": 26,
+                                    "radius": 47.56798011339563,
+                                    "center": [
+                                            270.31754493141534,
+                                            217.654593182847
+                                    ],
+                                    "from": -2.715638825248282,
+                                    "to": -2.2618532197297565
+                            }
+                    }
             },
             {
                     "v0": 183,
@@ -3907,11 +4121,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -1127,
+                                            237
+                                    ],
+                                    "b": [
+                                            -1110,
+                                            190
+                                    ],
+                                    "curve": -143.8177684851033,
+                                    "radius": 26.289656246137973,
+                                    "center": [
+                                            -1126.1769509981852,
+                                            210.72323049001812
+                                    ],
+                                    "from": -0.9079851879285031,
+                                    "to": 1.6021083950074837
+                            }
+                    }
             },
             {
                     "v0": 185,
@@ -3921,11 +4156,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -1155,
+                                            204
+                                    ],
+                                    "b": [
+                                            -1110,
+                                            190
+                                    ],
+                                    "curve": 50.20854641779184,
+                                    "radius": 55.539897141722065,
+                                    "center": [
+                                            -1117.559500959693,
+                                            245.0230326295586
+                                    ],
+                                    "from": -2.310567596876571,
+                                    "to": -1.4342631492456988
+                            }
+                    }
             },
             {
                     "v0": 187,
@@ -3935,11 +4191,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -1122,
+                                            265
+                                    ],
+                                    "b": [
+                                            -1102,
+                                            278
+                                    ],
+                                    "curve": 26,
+                                    "radius": 53.01980235951643,
+                                    "center": [
+                                            -1140.154593182847,
+                                            314.81475874284155
+                                    ],
+                                    "from": -1.2213139089629748,
+                                    "to": -0.7675283034444492
+                            }
+                    }
             },
             {
                     "v0": 189,
@@ -3949,11 +4226,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            -1102,
+                                            265
+                                    ],
+                                    "b": [
+                                            -1117,
+                                            282
+                                    ],
+                                    "curve": 26,
+                                    "radius": 50.39222457444682,
+                                    "center": [
+                                            -1146.3175449314153,
+                                            241.01393094286883
+                                    ],
+                                    "from": 0.4960865506422281,
+                                    "to": 0.9498721561607536
+                            }
+                    }
             },
             {
                     "v0": 191,
@@ -3963,11 +4261,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            752,
+                                            385
+                                    ],
+                                    "b": [
+                                            752,
+                                            449
+                                    ],
+                                    "curve": -176.83370265843118,
+                                    "radius": 32.012219580491916,
+                                    "center": [
+                                            752.8844221105526,
+                                            417
+                                    ],
+                                    "from": 1.5984274836486487,
+                                    "to": -1.5984274836486487
+                            }
+                    }
             },
             {
                     "v0": 193,
@@ -3977,11 +4296,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            664,
+                                            368
+                                    ],
+                                    "b": [
+                                            654,
+                                            425
+                                    ],
+                                    "curve": 16,
+                                    "radius": 207.90851387843483,
+                                    "center": [
+                                            456.21196291205,
+                                            360.92315138807896
+                                    ],
+                                    "from": 0.03404485818202742,
+                                    "to": 0.31329753850112013
+                            }
+                    }
             },
             {
                     "v0": 195,
@@ -3991,11 +4331,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            786,
+                                            384
+                                    ],
+                                    "b": [
+                                            797,
+                                            441
+                                    ],
+                                    "curve": 169.63716797536767,
+                                    "radius": 29.14494427798842,
+                                    "center": [
+                                            788.9156171284635,
+                                            412.99874055415614
+                                    ],
+                                    "from": -1.6710024633785199,
+                                    "to": 1.289724651550329
+                            }
+                    }
             },
             {
                     "v0": 197,
@@ -4005,11 +4366,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            698,
+                                            383
+                                    ],
+                                    "b": [
+                                            694,
+                                            440
+                                    ],
+                                    "curve": 16,
+                                    "radius": 205.2845633045229,
+                                    "center": [
+                                            493.21196291205,
+                                            397.2692605552316
+                                    ],
+                                    "from": -0.069565757521091,
+                                    "to": 0.2096869227980017
+                            }
+                    }
             },
             {
                     "v0": 199,
@@ -4019,11 +4401,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            707,
+                                            405
+                                    ],
+                                    "b": [
+                                            648,
+                                            406
+                                    ],
+                                    "curve": 16,
+                                    "radius": 211.9966917481407,
+                                    "center": [
+                                            673.9423151388079,
+                                            195.59659318966584
+                                    ],
+                                    "from": 1.4142224568289454,
+                                    "to": 1.693475137148038
+                            }
+                    }
             },
             {
                     "v0": 201,
@@ -4033,11 +4436,32 @@ export const map = {
                     "color": "535663",
                     "bCoef": 0.2,
                     "cMask": [
-                            "c1"
+                            "c0"
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {},
+                            "arc": {
+                                    "a": [
+                                            787,
+                                            384
+                                    ],
+                                    "b": [
+                                            808,
+                                            438
+                                    ],
+                                    "curve": -171.65912695031577,
+                                    "radius": 29.046723708589298,
+                                    "center": [
+                                            799.46875,
+                                            410.234375
+                                    ],
+                                    "from": 1.2726928865861593,
+                                    "to": -2.0144754642114844
+                            }
+                    }
             }
     ],
     "planes": [
@@ -4054,7 +4478,30 @@ export const map = {
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "extremes": {
+                                    "normal": [
+                                            0,
+                                            1
+                                    ],
+                                    "dist": -500,
+                                    "canvas_rect": [
+                                            -1400,
+                                            -800,
+                                            1400,
+                                            800
+                                    ],
+                                    "a": [
+                                            -1400,
+                                            -500
+                                    ],
+                                    "b": [
+                                            1400,
+                                            -500
+                                    ]
+                            }
+                    }
             },
             {
                     "normal": [
@@ -4069,7 +4516,30 @@ export const map = {
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "extremes": {
+                                    "normal": [
+                                            0,
+                                            -1
+                                    ],
+                                    "dist": -500,
+                                    "canvas_rect": [
+                                            -1400,
+                                            -800,
+                                            1400,
+                                            800
+                                    ],
+                                    "a": [
+                                            -1400,
+                                            500
+                                    ],
+                                    "b": [
+                                            1400,
+                                            500
+                                    ]
+                            }
+                    }
             },
             {
                     "normal": [
@@ -4084,7 +4554,30 @@ export const map = {
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "extremes": {
+                                    "normal": [
+                                            1,
+                                            0
+                                    ],
+                                    "dist": -1000,
+                                    "canvas_rect": [
+                                            -1400,
+                                            -800,
+                                            1400,
+                                            800
+                                    ],
+                                    "a": [
+                                            -1000,
+                                            -800
+                                    ],
+                                    "b": [
+                                            -1000,
+                                            800
+                                    ]
+                            }
+                    }
             }
     ],
     "goals": [],
@@ -4249,7 +4742,10 @@ export const map = {
                     "cGroup": [
                             "kick",
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 130,
@@ -6173,7 +6669,10 @@ export const map = {
                     "cGroup": [
                             "kick",
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 125,
@@ -7038,7 +7537,10 @@ export const map = {
                     "cGroup": [
                             "kick",
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 19,
@@ -7189,7 +7691,11 @@ export const map = {
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    },
+                    "_selected": true
             },
             {
                     "radius": 17,
@@ -7221,6 +7727,25 @@ export const map = {
                     "cGroup": [
                             "wall"
                     ]
+            },
+            {
+                    "radius": 6,
+                    "invMass": 0,
+                    "pos": [
+                            -510,
+                            326
+                    ],
+                    "color": "454C5E",
+                    "bCoef": 0.2,
+                    "cMask": [
+                            "c1"
+                    ],
+                    "cGroup": [
+                            "wall"
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             }
     ],
     "playerPhysics": {
