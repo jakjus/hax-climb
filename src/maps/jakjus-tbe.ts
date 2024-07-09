@@ -1,8 +1,7 @@
 export const slug = "jakjus-tbe"
 export const estimatedTimeMins = 0.8
 export const bounds = {x: [-443, -343], y: [-330, -280]}
-export const map = 
-{
+export const map = {
     "name": "[Very Easy] Jakjus' T.B.E.",
     "width": 1400,
     "height": 800,
@@ -185,10 +184,7 @@ export const map =
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": -190,
-                    "vis": false,
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "vis": false
             },
             {
                     "x": -560,
@@ -202,10 +198,7 @@ export const map =
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": -190,
-                    "vis": false,
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "vis": false
             },
             {
                     "x": -560,
@@ -219,10 +212,7 @@ export const map =
                             "wall"
                     ],
                     "bias": 0,
-                    "color": "f7f725",
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "color": "f7f725"
             },
             {
                     "x": -560,
@@ -236,10 +226,7 @@ export const map =
                             "wall"
                     ],
                     "bias": 30,
-                    "color": "f7f725",
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "color": "f7f725"
             },
             {
                     "x": 200,
@@ -459,10 +446,7 @@ export const map =
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": 420,
-                    "vis": false,
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "vis": false
             },
             {
                     "x": -590,
@@ -477,10 +461,7 @@ export const map =
                     "color": "FFFFFF",
                     "curve": 0,
                     "bias": 420,
-                    "vis": false,
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "vis": false
             },
             {
                     "x": -1000,
@@ -532,10 +513,7 @@ export const map =
                             "kick",
                             "wall"
                     ],
-                    "color": "db8c76",
-                    "_data": {
-                            "mirror": {}
-                    }
+                    "color": "db8c76"
             },
             {
                     "x": -600,
@@ -1358,9 +1336,6 @@ export const map =
                             "wall"
                     ],
                     "curve": 90,
-                    "_data": {
-                            "mirror": {}
-                    },
                     "bias": -190
             },
             {
@@ -2748,21 +2723,7 @@ export const map =
                     ],
                     "bias": -190,
                     "y": 310,
-                    "x": 220,
-                    "_data": {
-                            "mirror": {},
-                            "arc": {
-                                    "a": [
-                                            -540,
-                                            310
-                                    ],
-                                    "b": [
-                                            -560,
-                                            310
-                                    ],
-                                    "curve": 0
-                            }
-                    }
+                    "x": 220
             },
             {
                     "v0": 14,
@@ -2778,26 +2739,6 @@ export const map =
                     ],
                     "bias": 0,
                     "y": 38,
-                    "_data": {
-                            "mirror": {},
-                            "arc": {
-                                    "a": [
-                                            -560,
-                                            350
-                                    ],
-                                    "b": [
-                                            -560,
-                                            480
-                                    ],
-                                    "radius": null,
-                                    "center": [
-                                            null,
-                                            null
-                                    ],
-                                    "from": null,
-                                    "to": null
-                            }
-                    },
                     "x": -560
             },
             {
@@ -2923,21 +2864,7 @@ export const map =
                     ],
                     "bias": 420,
                     "y": 300,
-                    "x": -590,
-                    "_data": {
-                            "mirror": {},
-                            "arc": {
-                                    "a": [
-                                            -590,
-                                            340
-                                    ],
-                                    "b": [
-                                            -590,
-                                            350
-                                    ],
-                                    "curve": 0
-                            }
-                    }
+                    "x": -590
             },
             {
                     "v0": 33,
@@ -4313,10 +4240,7 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
                     "radius": 35,
@@ -4335,11 +4259,11 @@ export const map =
                     ]
             },
             {
-                    "radius": 18,
+                    "radius": 6,
                     "invMass": 0,
                     "pos": [
-                            496,
-                            108
+                            501,
+                            117
                     ],
                     "color": "transparent",
                     "cMask": [
@@ -4348,7 +4272,10 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 16,
@@ -4396,10 +4323,7 @@ export const map =
                     "cGroup": [
                             "kick",
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
                     "radius": 130,
@@ -5111,10 +5035,7 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
                     "radius": 12,
@@ -5130,10 +5051,7 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
                     "radius": 39,
@@ -6181,7 +6099,10 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 8,
@@ -6329,10 +6250,7 @@ export const map =
                     "cGroup": [
                             "kick",
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
                     "radius": 125,
@@ -7348,17 +7266,14 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ],
-                    "_data": {
-                            "mirror": {}
-                    }
+                    ]
             },
             {
-                    "radius": 17,
+                    "radius": 15,
                     "invMass": 0,
                     "pos": [
-                            541,
-                            66
+                            542,
+                            61
                     ],
                     "color": "transparent",
                     "cMask": [
@@ -7367,7 +7282,10 @@ export const map =
                     ],
                     "cGroup": [
                             "wall"
-                    ]
+                    ],
+                    "_data": {
+                            "mirror": {}
+                    }
             },
             {
                     "radius": 9,
