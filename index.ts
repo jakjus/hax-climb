@@ -54,6 +54,7 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
 
 
     room.onPlayerJoin = async p => {
+        if(!p.auth) return room.kickPlayer(p.id, "Auth", false)
         idToAuth[p.id] = p.auth
         await updateTime(p)
         await loadCheckpoint(p)
@@ -62,6 +63,7 @@ const roomBuilder = async (HBInit: Headless, args: RoomArgs) => {
     }
 
     room.onPlayerLeave = async p => {
+        if(!p.auth) return;
         const stats = await getStats(p)
         if (stats && stats.started && !stats.stopped) {
           setStats(p, "stopped", new Date().getTime())
